@@ -1,0 +1,23 @@
+node_modules/
+dist/
+
+# Playwright output
+playwright-report/
+test-results/
+.auth/
+
+# Auth state (contains session tokens — never commit)
+tests/.auth/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Env
+.env
+.env.local
