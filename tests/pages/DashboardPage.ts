@@ -30,7 +30,13 @@ export class DashboardPage {
   }
 
   async logout() {
-    await this.logoutButton.click();
+    if (await this.logoutButton.isVisible()) {
+      await this.logoutButton.click();
+    } else {
+      // On mobile the nav logout is hidden — use the settings page instead
+      await this.page.goto('/settings');
+      await this.page.getByRole('button', { name: /^logout$/i }).click();
+    }
     await expect(this.page).toHaveURL(/login|home|\//);
   }
 }
