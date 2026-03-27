@@ -14,7 +14,7 @@ export class DashboardPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.heading = page.getByRole('link', { name: /^dashboard$/i });
+    this.heading = page.getByRole('heading', { name: /earnings/i });
     this.addShiftButton = page.getByRole('button', { name: /quick add tip/i });
     this.shiftTable = page.getByRole('table');
     this.logoutButton = page.locator('a.logout-link');

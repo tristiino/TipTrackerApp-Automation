@@ -1,5 +1,6 @@
 import { test as setup, expect } from '@playwright/test';
 import { TEST_USER } from '../fixtures/test-data';
+import * as fs from 'fs';
 
 /**
  * Global auth setup — runs once before the full test suite.
@@ -12,6 +13,7 @@ import { TEST_USER } from '../fixtures/test-data';
 const authFile = 'tests/.auth/user.json';
 
 setup('authenticate', async ({ page }) => {
+  fs.mkdirSync('tests/.auth', { recursive: true });
   await page.goto('/login');
 
   await page.getByLabel(/username or email/i).fill(TEST_USER.username);
