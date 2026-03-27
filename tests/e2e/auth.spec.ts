@@ -36,7 +36,7 @@ test.describe('Authentication', () => {
     await loginPage.goto();
     await loginPage.login(INVALID_USER.username, INVALID_USER.password);
 
-    await loginPage.expectError(/invalid/i);
+    await loginPage.expectError(/login failed|check your credentials/i);
   });
 
   test('should log out successfully', async ({ page }) => {

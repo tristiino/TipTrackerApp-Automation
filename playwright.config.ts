@@ -25,7 +25,7 @@ export default defineConfig({
 
   projects: [
     /* --- Setup: runs auth before any tests --- */
-    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+    { name: 'setup', testMatch: /.*\.setup\.ts/, testDir: './tests/helpers' },
 
     /* --- Cross-browser --- */
     {

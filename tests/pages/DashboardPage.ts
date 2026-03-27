@@ -14,10 +14,10 @@ export class DashboardPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.heading = page.getByRole('heading', { name: /dashboard/i });
-    this.addShiftButton = page.getByRole('button', { name: /add shift/i });
+    this.heading = page.getByRole('link', { name: /^dashboard$/i });
+    this.addShiftButton = page.getByRole('button', { name: /quick add tip/i });
     this.shiftTable = page.getByRole('table');
-    this.logoutButton = page.getByRole('button', { name: /log out/i });
+    this.logoutButton = page.locator('a.logout-link');
   }
 
   async goto() {

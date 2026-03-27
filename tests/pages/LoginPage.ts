@@ -14,10 +14,10 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.usernameInput = page.getByPlaceholder(/username or email/i);
-    this.passwordInput = page.getByPlaceholder(/password/i);
-    this.submitButton = page.getByRole('button', { name: /log in/i });
-    this.errorMessage = page.getByRole('alert');
+    this.usernameInput = page.getByLabel(/username or email/i);
+    this.passwordInput = page.getByLabel(/^password$/i);
+    this.submitButton = page.getByRole('button', { name: /^login$/i });
+    this.errorMessage = page.getByText(/login failed|please check your credentials/i);
   }
 
   async goto() {
@@ -30,7 +30,7 @@ export class LoginPage {
     await this.submitButton.click();
   }
 
-  async expectError(message: string) {
+  async expectError(message: string | RegExp) {
     await expect(this.errorMessage).toContainText(message);
   }
 }

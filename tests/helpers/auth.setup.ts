@@ -14,9 +14,9 @@ const authFile = 'tests/.auth/user.json';
 setup('authenticate', async ({ page }) => {
   await page.goto('/login');
 
-  await page.getByPlaceholder(/username or email/i).fill(TEST_USER.username);
-  await page.getByPlaceholder(/password/i).fill(TEST_USER.password);
-  await page.getByRole('button', { name: /log in/i }).click();
+  await page.getByLabel(/username or email/i).fill(TEST_USER.username);
+  await page.getByLabel(/^password$/i).fill(TEST_USER.password);
+  await page.getByRole('button', { name: /^login$/i }).click();
 
   // Wait until we've landed on the dashboard
   await expect(page).toHaveURL(/dashboard/, { timeout: 10_000 });
