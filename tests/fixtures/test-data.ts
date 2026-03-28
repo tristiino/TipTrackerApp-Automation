@@ -23,3 +23,13 @@ export const SAMPLE_SHIFT = {
   creditTips: 120.0,
   totalSales: 950.0,
 };
+
+/**
+ * Simulates a pre-Sprint-2 entry that has no cash/credit split.
+ * Used to verify P1-012 backward compatibility: legacy entries should
+ * display correctly with the new format without data loss.
+ */
+export const LEGACY_SHIFT = {
+  date: '2024-01-10',
+  totalTips: 95.0, // stored in cashTips field by migration; creditTips = 0
+};

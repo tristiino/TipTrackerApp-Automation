@@ -24,10 +24,10 @@ test.describe('Dashboard', () => {
     await expect(dashboard.addShiftButton).toBeVisible();
   });
 
-  test('should display the graph', async ({ page }) => {
+  test('should display the chart', async ({ page }) => {
     const dashboard = new DashboardPage(page);
     await dashboard.goto();
-    await expect(dashboard.graph).toBeVisible();
+    await expect(dashboard.cashCreditChart).toBeVisible();
   });
   // TODO: Add shift entry tests in Sprint 1
   // TODO: Add tip summary / analytics tests in Sprint 2

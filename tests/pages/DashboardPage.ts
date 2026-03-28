@@ -3,6 +3,7 @@ import { Page, Locator, expect } from '@playwright/test';
 /**
  * DashboardPage — Page Object Model
  * Encapsulates all interactions with the main dashboard.
+ * Covers Sprint 3 analytics stories: P1-013 through P1-018.
  */
 export class DashboardPage {
   readonly page: Page;
@@ -11,7 +12,22 @@ export class DashboardPage {
   readonly addShiftButton: Locator;
   readonly shiftTable: Locator;
   readonly logoutButton: Locator;
-  readonly graph: Locator;
+
+  // Analytics — Sprint 3
+  readonly chartToggleDaily: Locator;
+  readonly chartToggleWeekly: Locator;
+  readonly chartToggleMonthly: Locator;
+  readonly summaryCardTotalTips: Locator;
+  readonly summaryCardAvgTips: Locator;
+  readonly summaryCardHourlyWage: Locator;
+  readonly cashCreditChart: Locator;
+
+  // Navigation — Sprint 4
+  readonly navDashboard: Locator;
+  readonly navLogTips: Locator;
+  readonly navHistory: Locator;
+  readonly navSettings: Locator;
+  readonly quickAddButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -19,7 +35,22 @@ export class DashboardPage {
     this.addShiftButton = page.getByRole('button', { name: /quick add tip/i });
     this.shiftTable = page.getByRole('table');
     this.logoutButton = page.locator('a.logout-link');
-    this.graph = page.locator('canvas').first();
+
+    // Analytics
+    this.chartToggleDaily = page.getByRole('button', { name: /^daily$/i });
+    this.chartToggleWeekly = page.getByRole('button', { name: /^weekly$/i });
+    this.chartToggleMonthly = page.getByRole('button', { name: /^monthly$/i });
+    this.summaryCardTotalTips = page.locator('[data-testid="card-total-earnings"], .summary-card').filter({ hasText: /total tips/i });
+    this.summaryCardAvgTips = page.locator('[data-testid="card-avg-tips"], .summary-card').filter({ hasText: /average|avg/i });
+    this.summaryCardHourlyWage = page.locator('[data-testid="card-hourly-wage"], .summary-card').filter({ hasText: /hourly|per hour/i });
+    this.cashCreditChart = page.locator('[data-testid="cash-credit-chart"], canvas').nth(1);
+
+    // Navigation
+    this.navDashboard = page.getByRole('link', { name: /^dashboard$/i });
+    this.navLogTips = page.getByRole('link', { name: /log tips/i });
+    this.navHistory = page.getByRole('link', { name: /history/i });
+    this.navSettings = page.getByRole('link', { name: /settings/i });
+    this.quickAddButton = page.getByRole('button', { name: /quick add tip/i });
   }
 
   async goto() {
