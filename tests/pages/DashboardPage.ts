@@ -11,6 +11,7 @@ export class DashboardPage {
   readonly addShiftButton: Locator;
   readonly shiftTable: Locator;
   readonly logoutButton: Locator;
+  readonly graph: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -18,6 +19,7 @@ export class DashboardPage {
     this.addShiftButton = page.getByRole('button', { name: /quick add tip/i });
     this.shiftTable = page.getByRole('table');
     this.logoutButton = page.locator('a.logout-link');
+    this.graph = page.locator('canvas').first();
   }
 
   async goto() {
