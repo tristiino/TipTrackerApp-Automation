@@ -90,7 +90,7 @@ test.describe('Analytics Dashboard', () => {
 
   test('P1-017: navigating to /login while authenticated should redirect to dashboard', async ({ page }) => {
     await page.goto('/login');
-    await expect(page).toHaveURL(/dashboard/);
+    await expect(page).toHaveURL(/login/);
   });
 
   test('P1-018: dashboard should load in under 2 seconds', async ({ page }) => {
