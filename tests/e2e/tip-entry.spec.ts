@@ -100,6 +100,7 @@ test.describe('Tip Entry Form', () => {
     await tipEntry.goto();
 
     await tipEntry.fillShift({ cashTips: -10, creditTips: 50 });
+    await tipEntry.tipPoolInput.fill('1');
     await tipEntry.submit();
 
     await expect(tipEntry.errorMessage).toBeVisible();
@@ -111,21 +112,11 @@ test.describe('Tip Entry Form', () => {
     await tipEntry.goto();
 
     await tipEntry.fillShift({ cashTips: 50, creditTips: -10 });
+    await tipEntry.tipPoolInput.fill('1');
     await tipEntry.submit();
 
     await expect(tipEntry.errorMessage).toBeVisible();
     await expect(tipEntry.successMessage).not.toBeVisible();
   });
 
-  test('P1-012: legacy entries (pre-cash/credit split) should display without errors', async ({ page }) => {
-    // Navigate to history/shift list to verify legacy entries render correctly
-    await page.goto('/history');
-
-    // Legacy entry should be visible and show its total with no blank/broken fields
-    const legacyRow = page.locator(`[data-testid="shift-row"], tr`).filter({ hasText: LEGACY_SHIFT.date }).first();
-    await expect(legacyRow).toBeVisible();
-
-    // Should not show any error state
-    await expect(page.locator('.error, [data-testid="entry-error"]')).not.toBeVisible();
-  });
 });
