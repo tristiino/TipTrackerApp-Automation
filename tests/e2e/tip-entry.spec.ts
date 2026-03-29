@@ -94,29 +94,29 @@ test.describe('Tip Entry Form', () => {
     await tipEntry.dateInput.fill('2024-01-15');
     expect(await tipEntry.getDateValue()).toBe('2024-01-15');
   });
+//need error handling for this test
+  test('P1-011: should reject negative cash tip values', async ({ page }) => {
+    const tipEntry = new TipEntryPage(page);
+    await tipEntry.goto();
+
+    await tipEntry.fillShift({ cashTips: -10, creditTips: 50 });
+    await tipEntry.tipPoolInput.fill('1');
+    await tipEntry.submit();
+
+    await expect(tipEntry.errorMessage).toBeVisible();
+    await expect(tipEntry.successMessage).not.toBeVisible();
+  });
 // need error handling for this test
-//   test('P1-011: should reject negative cash tip values', async ({ page }) => {
-//     const tipEntry = new TipEntryPage(page);
-//     await tipEntry.goto();
+  test('P1-011: should reject negative credit tip values', async ({ page }) => {
+    const tipEntry = new TipEntryPage(page);
+    await tipEntry.goto();
 
-//     await tipEntry.fillShift({ cashTips: -10, creditTips: 50 });
-//     await tipEntry.tipPoolInput.fill('1');
-//     await tipEntry.submit();
+    await tipEntry.fillShift({ cashTips: 50, creditTips: -10 });
+    await tipEntry.tipPoolInput.fill('1');
+    await tipEntry.submit();
 
-//     await expect(tipEntry.errorMessage).toBeVisible();
-//     await expect(tipEntry.successMessage).not.toBeVisible();
-//   });
-// // need error handling for this test
-//   test('P1-011: should reject negative credit tip values', async ({ page }) => {
-//     const tipEntry = new TipEntryPage(page);
-//     await tipEntry.goto();
-
-//     await tipEntry.fillShift({ cashTips: 50, creditTips: -10 });
-//     await tipEntry.tipPoolInput.fill('1');
-//     await tipEntry.submit();
-
-//     await expect(tipEntry.errorMessage).toBeVisible();
-//     await expect(tipEntry.successMessage).not.toBeVisible();
-//   });
+    await expect(tipEntry.errorMessage).toBeVisible();
+    await expect(tipEntry.successMessage).not.toBeVisible();
+  });
 
 });

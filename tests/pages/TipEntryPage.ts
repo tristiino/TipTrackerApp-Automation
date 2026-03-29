@@ -31,8 +31,8 @@ export class TipEntryPage {
     this.creditTipsInput = page.locator('#creditTips');
     this.totalTipsDisplay = page.locator('.tip-total-value');
     this.submitButton = page.getByRole('button', { name: 'Submit' });
-    this.successMessage = page.getByText(/shift saved|entry added|success/i);
-    this.errorMessage = page.locator('[data-testid="form-error"], .error-message, [role="alert"]').first();
+    this.successMessage = page.getByText('Tip submitted successfully!');
+    this.errorMessage = page.getByText('Submission unsuccessful.');
     this.tipPoolInput = page.getByRole('spinbutton', { name: 'Number of People in Tip Pool' });
     this.shiftTypeInput = page.getByRole('button', { name: 'Evening' })
   }
