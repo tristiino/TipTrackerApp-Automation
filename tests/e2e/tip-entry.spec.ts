@@ -30,6 +30,7 @@ test.describe('Tip Entry Form', () => {
       endTime: SAMPLE_SHIFT.endTime,
       cashTips: SAMPLE_SHIFT.cashTips,
       creditTips: SAMPLE_SHIFT.creditTips,
+      tipPool: SAMPLE_SHIFT.tipPool,
     });
     await tipEntry.submit();
 
@@ -43,8 +44,7 @@ test.describe('Tip Entry Form', () => {
     await tipEntry.cashTipsInput.fill('50');
     await tipEntry.creditTipsInput.fill('75');
 
-    const total = await tipEntry.getTotalTipsText();
-    expect(total).toContain('125');
+    await expect(tipEntry.totalTipsDisplay).toContainText('125');
   });
 
   test('P1-008: total should update immediately when either field changes without page refresh', async ({ page }) => {
@@ -67,8 +67,12 @@ test.describe('Tip Entry Form', () => {
     await expect(tipEntry.startTimeInput).toBeVisible();
     await expect(tipEntry.endTimeInput).toBeVisible();
 
+    await tipEntry.shiftTypeInput.click();
+
     await tipEntry.startTimeInput.fill(SAMPLE_SHIFT.startTime);
     await tipEntry.endTimeInput.fill(SAMPLE_SHIFT.endTime);
+
+    await tipEntry.hoursDisplay.scrollIntoViewIfNeeded();
 
     const hours = await tipEntry.hoursDisplay.textContent();
     expect(hours).toContain(String(SAMPLE_SHIFT.hoursWorked));

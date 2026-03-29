@@ -14,14 +14,25 @@ export const INVALID_USER = {
   password: 'WrongPassword99!',
 };
 
+/** Local calendar date as YYYY-MM-DD (matches `<input type="date">`). */
+function addDaysISO(base: Date, days: number): string {
+  const d = new Date(base);
+  d.setDate(d.getDate() + days);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 export const SAMPLE_SHIFT = {
-  date: '2024-06-15',
+  date: addDaysISO(new Date(), -1),
   startTime: '16:00',
   endTime: '23:00',
   hoursWorked: 7,
   cashTips: 85.5,
   creditTips: 120.0,
   totalSales: 950.0,
+  tipPool: 1,
 };
 
 /**

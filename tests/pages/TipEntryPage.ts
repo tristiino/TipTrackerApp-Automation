@@ -18,27 +18,31 @@ export class TipEntryPage {
   readonly submitButton: Locator;
   readonly successMessage: Locator;
   readonly errorMessage: Locator;
+  readonly tipPoolInput: Locator;
+  readonly shiftTypeInput: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.dateInput = page.getByLabel(/date/i);
-    this.startTimeInput = page.getByLabel(/start time/i);
-    this.endTimeInput = page.getByLabel(/end time/i);
-    this.hoursDisplay = page.locator('[data-testid="hours-worked"], .hours-worked, [aria-label*="hours"]').first();
-    this.cashTipsInput = page.getByLabel(/cash tips/i);
-    this.creditTipsInput = page.getByLabel(/credit(?: card)? tips/i);
-    this.totalTipsDisplay = page.locator('[data-testid="total-tips"], .total-tips, [aria-label*="total"]').first();
-    this.submitButton = page.getByRole('button', { name: /save|submit|add shift/i });
+    this.startTimeInput = page.getByRole('textbox').nth(1);
+    this.endTimeInput = page.getByRole('textbox').nth(2);
+    this.hoursDisplay = page.getByText(/Hours Worked/i).locator('..');
+    this.cashTipsInput = page.locator('#cashTips');
+    this.creditTipsInput = page.locator('#creditTips');
+    this.totalTipsDisplay = page.locator('.tip-total-value');
+    this.submitButton = page.getByRole('button', { name: 'Submit' });
     this.successMessage = page.getByText(/shift saved|entry added|success/i);
     this.errorMessage = page.locator('[data-testid="form-error"], .error-message, [role="alert"]').first();
+    this.tipPoolInput = page.getByRole('spinbutton', { name: 'Number of People in Tip Pool' });
+    this.shiftTypeInput = page.getByRole('button', { name: 'Evening' })
   }
 
   async goto() {
-    await this.page.goto('/log-tips');
+    await this.page.goto('/tip-entry-form');
   }
 
   async expectLoaded() {
-    await expect(this.page).toHaveURL(/log-tips|add-shift|entry/i);
+    await expect(this.page).toHaveURL(/tip-entry-form/i);
     await expect(this.cashTipsInput).toBeVisible();
     await expect(this.creditTipsInput).toBeVisible();
   }
@@ -49,21 +53,31 @@ export class TipEntryPage {
     endTime,
     cashTips,
     creditTips,
+    tipPool,
   }: {
     date?: string;
     startTime?: string;
     endTime?: string;
     cashTips: number;
     creditTips: number;
+    tipPool?: number;
   }) {
     if (date) await this.dateInput.fill(date);
+    if (true) await this.shiftTypeInput.click();
     if (startTime) await this.startTimeInput.fill(startTime);
     if (endTime) await this.endTimeInput.fill(endTime);
     await this.cashTipsInput.fill(String(cashTips));
     await this.creditTipsInput.fill(String(creditTips));
+    if (tipPool !== undefined) await this.tipPoolInput.fill(String(tipPool));
   }
 
   async submit() {
+    // Smoothly scroll the submit button into view
+    await this.submitButton.evaluate((node) => node.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+    
+    // Wait for the smooth scrolling animation to finish before clicking
+    await this.page.waitForTimeout(1000); 
+    
     await this.submitButton.click();
   }
 

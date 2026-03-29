@@ -41,18 +41,18 @@ test.describe('Navigation', () => {
     await expect(page).toHaveURL(/dashboard/);
   });
 
-  test('P1-019: Log Tips nav link should navigate to /log-tips', async ({ page }) => {
+  test('P1-019: Log Tips nav link should navigate to /tip-entry-form', async ({ page }) => {
     const dashboard = new DashboardPage(page);
     await dashboard.goto();
     await dashboard.navLogTips.click();
-    await expect(page).toHaveURL(/log-tips/);
+    await expect(page).toHaveURL(/tip-entry-form/);
   });
 
-  test('P1-019: History nav link should navigate to /history', async ({ page }) => {
+  test('P1-019: History nav link should navigate to /reports', async ({ page }) => {
     const dashboard = new DashboardPage(page);
     await dashboard.goto();
     await dashboard.navHistory.click();
-    await expect(page).toHaveURL(/history/);
+    await expect(page).toHaveURL(/reports/);
   });
 
   test('P1-019: Settings nav link should navigate to /settings', async ({ page }) => {
