@@ -30,29 +30,29 @@ export default defineConfig({
     /* --- Cross-browser --- */
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], storageState: 'tests/.auth/user.json' },
       dependencies: ['setup'],
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { ...devices['Desktop Firefox'], storageState: 'tests/.auth/user.json' },
       dependencies: ['setup'],
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: { ...devices['Desktop Safari'], storageState: 'tests/.auth/user.json' },
       dependencies: ['setup'],
     },
 
     /* --- Mobile viewports --- */
     {
       name: 'mobile-chrome',
-      use: { ...devices['Pixel 5'] },
+      use: { ...devices['Pixel 5'], storageState: 'tests/.auth/user.json' },
       dependencies: ['setup'],
     },
     {
       name: 'mobile-safari',
-      use: { ...devices['iPhone 12'] },
+      use: { ...devices['iPhone 12'], storageState: 'tests/.auth/user.json' },
       dependencies: ['setup'],
     },
   ],

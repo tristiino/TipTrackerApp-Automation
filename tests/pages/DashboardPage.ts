@@ -22,6 +22,11 @@ export class DashboardPage {
   readonly summaryCardHourlyWage: Locator;
   readonly cashCreditChart: Locator;
 
+  // Pay Period — Ad-Hoc 2026-03-30
+  readonly chartTogglePayPeriod: Locator;
+  readonly noPayPeriodNotice: Locator;
+  readonly noPayPeriodSettingsLink: Locator;
+
   // Navigation — Sprint 4
   readonly navDashboard: Locator;
   readonly navLogTips: Locator;
@@ -35,6 +40,11 @@ export class DashboardPage {
     this.addShiftButton = page.getByRole('button', { name: /quick add tip/i });
     this.shiftTable = page.getByRole('table');
     this.logoutButton = page.locator('a.logout-link');
+
+    // Pay Period
+    this.chartTogglePayPeriod = page.getByRole('button', { name: /^pay period$/i });
+    this.noPayPeriodNotice = page.locator('.no-pay-period');
+    this.noPayPeriodSettingsLink = page.locator('.no-pay-period').getByRole('link', { name: /settings/i });
 
     // Analytics
     this.chartToggleDaily = page.getByRole('button', { name: /^daily$/i });
