@@ -45,14 +45,26 @@ export default defineConfig({
     },
 
     /* --- Mobile viewports --- */
+    /* Apple: latest (iPhone 15 Pro) + most popular (iPhone 14) */
     {
-      name: 'mobile-chrome',
-      use: { ...devices['Pixel 5'], storageState: 'tests/.auth/user.json' },
+      name: 'iphone-15-pro',
+      use: { ...devices['iPhone 15 Pro'], storageState: 'tests/.auth/user.json' },
       dependencies: ['setup'],
     },
     {
-      name: 'mobile-safari',
-      use: { ...devices['iPhone 12'], storageState: 'tests/.auth/user.json' },
+      name: 'iphone-14',
+      use: { ...devices['iPhone 14'], storageState: 'tests/.auth/user.json' },
+      dependencies: ['setup'],
+    },
+    /* Android: latest (Galaxy S24) + most popular (Galaxy A55) */
+    {
+      name: 'galaxy-s24',
+      use: { ...devices['Galaxy S24'], storageState: 'tests/.auth/user.json' },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'galaxy-a55',
+      use: { ...devices['Galaxy A55'], storageState: 'tests/.auth/user.json' },
       dependencies: ['setup'],
     },
   ],
