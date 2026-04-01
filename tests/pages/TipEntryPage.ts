@@ -77,6 +77,11 @@ export class TipEntryPage {
     // scroll position, so no scroll strategy works. The tests verify form submission
     // behaviour, not button pointer-accessibility.
     await this.submitButton.click({ force: true });
+
+    // After submitting, scroll the success/error feedback into view. On narrow
+    // mobile viewports the message renders below the fold and toBeVisible() fails
+    // if the element is clipped or animation-gated by an IntersectionObserver.
+    await this.successMessage.or(this.errorMessage).first().scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {});
   }
 
   async getTotalTipsText(): Promise<string> {
