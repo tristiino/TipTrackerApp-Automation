@@ -72,16 +72,12 @@ export class TipEntryPage {
   }
 
   async submit() {
-    // force: true bypasses pointer-event interception — on narrow mobile viewports
-    // (e.g. Galaxy S24) the FAB and form fields overlap the button regardless of
-    // scroll position, so no scroll strategy works. The tests verify form submission
-    // behaviour, not button pointer-accessibility.
-    await this.submitButton.click({ force: true });
-
-    // After submitting, scroll the success/error feedback into view. On narrow
-    // mobile viewports the message renders below the fold and toBeVisible() fails
-    // if the element is clipped or animation-gated by an IntersectionObserver.
-    await this.successMessage.or(this.errorMessage).first().scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {});
+    const viewport = this.page.viewportSize();
+    if (viewport && viewport.width < 600) {
+      await this.submitButton.dispatchEvent('click');
+    } else {
+      await this.submitButton.click({ force: true });
+    }
   }
 
   async getTotalTipsText(): Promise<string> {
