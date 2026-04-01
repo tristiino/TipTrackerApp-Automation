@@ -72,6 +72,14 @@ npx playwright codegen https://tiptrackerapp.org/tip-entry-form
 
 **Codegen** launches a browser window and a side panel that **records your clicks, typing, and navigation**, then **prints matching Playwright code** (locators and actions) in real time. Use it to **explore the live app**, **discover stable selectors** (`getByRole`, `getByLabel`, etc.), and **prototype test steps** before you paste or adapt them into specs and page objects under `tests/`. Pass any URL (or omit it to start on a blank page); change the path to match the screen you are working on.
 
+### 7. View Test Reports
+
+```bash
+npm run test:report
+```
+
+This will open the HTML test report generated from your most recent test run. Playwright automatically generates this report when tests complete.
+
 ---
 
 ## Environment Variables
