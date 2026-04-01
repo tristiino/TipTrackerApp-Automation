@@ -63,7 +63,7 @@ export class TipEntryPage {
     tipPool?: number;
   }) {
     if (date) await this.dateInput.fill(date);
-    if (true) await this.shiftTypeInput.click();
+    await this.shiftTypeInput.click();
     if (startTime) await this.startTimeInput.fill(startTime);
     if (endTime) await this.endTimeInput.fill(endTime);
     await this.cashTipsInput.fill(String(cashTips));
@@ -72,12 +72,10 @@ export class TipEntryPage {
   }
 
   async submit() {
-    // Smoothly scroll the submit button into view
-    await this.submitButton.evaluate((node) => node.scrollIntoView({ behavior: 'smooth', block: 'center' }));
-    
-    // Wait for the smooth scrolling animation to finish before clicking
-    await this.page.waitForTimeout(1000); 
-    
+    // Scroll submit button to the top of the viewport — using 'center' can place
+    // it behind the fixed FAB button on narrow mobile viewports (e.g. Galaxy S24).
+    await this.submitButton.evaluate((node) => node.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    await this.page.waitForTimeout(1000);
     await this.submitButton.click();
   }
 

@@ -94,7 +94,7 @@ test.describe('Tip Entry Form', () => {
     await tipEntry.dateInput.fill('2024-01-15');
     expect(await tipEntry.getDateValue()).toBe('2024-01-15');
   });
-//need error handling for this test
+
   test('P1-011: should reject negative cash tip values', async ({ page }) => {
     const tipEntry = new TipEntryPage(page);
     await tipEntry.goto();
@@ -106,7 +106,7 @@ test.describe('Tip Entry Form', () => {
     await expect(tipEntry.errorMessage).toBeVisible();
     await expect(tipEntry.successMessage).not.toBeVisible();
   });
-// need error handling for this test
+
   test('P1-011: should reject negative credit tip values', async ({ page }) => {
     const tipEntry = new TipEntryPage(page);
     await tipEntry.goto();
