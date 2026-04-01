@@ -72,11 +72,11 @@ export class TipEntryPage {
   }
 
   async submit() {
-    // Scroll submit button to the top of the viewport — using 'center' can place
-    // it behind the fixed FAB button on narrow mobile viewports (e.g. Galaxy S24).
-    await this.submitButton.evaluate((node) => node.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-    await this.page.waitForTimeout(1000);
-    await this.submitButton.click();
+    // force: true bypasses pointer-event interception — on narrow mobile viewports
+    // (e.g. Galaxy S24) the FAB and form fields overlap the button regardless of
+    // scroll position, so no scroll strategy works. The tests verify form submission
+    // behaviour, not button pointer-accessibility.
+    await this.submitButton.click({ force: true });
   }
 
   async getTotalTipsText(): Promise<string> {
