@@ -17,6 +17,9 @@ Thumbs.db
 .vscode/
 .idea/
 *.iml
+.claude/
+CLAUDE.md
+**/CLAUDE.md
 
 # Env
 .env
