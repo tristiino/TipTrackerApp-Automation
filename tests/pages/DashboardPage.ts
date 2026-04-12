@@ -55,11 +55,11 @@ export class DashboardPage {
     this.summaryCardHourlyWage = page.locator('[data-testid="card-hourly-wage"], .summary-card').filter({ hasText: /hourly|per hour/i });
     this.cashCreditChart = page.locator('[data-testid="cash-credit-chart"], canvas').nth(1);
 
-    // Navigation — use list order, not accessible name: on viewports ≤768px the app hides
-    this.navDashboard = page.locator('ul.navbar-links > li > a').nth(0);
-    this.navLogTips = page.locator('ul.navbar-links > li > a').nth(1);
-    this.navHistory = page.locator('ul.navbar-links > li > a').nth(2);
-    this.navSettings = page.locator('ul.navbar-links > li > a').nth(3);
+    // Navigation
+    this.navDashboard = page.getByRole('link').filter({ hasText: 'Dashboard' });
+    this.navLogTips = page.getByRole('link').filter({ hasText: 'Log Tips' });
+    this.navHistory = page.getByRole('link').filter({ hasText: 'History' });
+    this.navSettings = page.getByRole('link').filter({ hasText: 'Settings' });
     this.quickAddButton = page.getByRole('button', { name: /quick add tip/i });
   }
 

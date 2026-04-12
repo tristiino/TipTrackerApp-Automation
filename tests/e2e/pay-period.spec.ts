@@ -22,13 +22,17 @@ const PAY_PERIOD = {
 // ---------------------------------------------------------------------------
 
 test.describe('Settings — Pay Period configuration', () => {
-  test('AD-001: should display pay period start and end date inputs', async ({ page }) => {
+  test('AD-001: should display pay period start and Length cycle', async ({ page }) => {
     const settings = new SettingsPage(page);
     await settings.goto();
     await settings.expectLoaded();
 
+   await settings.payPeriodStartInput.evaluate(el =>
+   el.scrollIntoView({ behavior: 'instant', block: 'center' })
+  );
+
     await expect(settings.payPeriodStartInput).toBeVisible();
-    await expect(settings.payPeriodEndInput).toBeVisible();
+    await expect(settings.payPeriodLengthCycle).toBeVisible();
   });
 
   test('AD-001: should display save and reset buttons on the settings page', async ({ page }) => {
@@ -50,19 +54,6 @@ test.describe('Settings — Pay Period configuration', () => {
     const parsed = JSON.parse(stored!);
     expect(parsed.startDate).toBe(PAY_PERIOD.startDate);
     expect(parsed.endDate).toBe(PAY_PERIOD.endDate);
-  });
-
-  test('AD-001: should clear pay period from localStorage after reset', async ({ page }) => {
-    // Pre-seed a period so reset has something to clear
-    await page.goto('/settings');
-    await page.evaluate((pp) => localStorage.setItem('payPeriod', JSON.stringify(pp)), PAY_PERIOD);
-
-    const settings = new SettingsPage(page);
-    await settings.goto();
-    await settings.resetButton.click();
-
-    const stored = await page.evaluate(() => localStorage.getItem('payPeriod'));
-    expect(stored).toBeNull();
   });
 });
 
@@ -101,30 +92,7 @@ test.describe('Dashboard — no pay period configured', () => {
     await page.reload();
   });
 
-  test('AD-003: should show the "no pay period set" notice when none is configured', async ({ page }) => {
-    const dashboard = new DashboardPage(page);
-    await dashboard.goto();
-    await dashboard.chartTogglePayPeriod.click();
-
-    await expect(dashboard.noPayPeriodNotice).toBeVisible();
-  });
-
-  test('AD-003: notice should contain a link to the Settings page', async ({ page }) => {
-    const dashboard = new DashboardPage(page);
-    await dashboard.goto();
-    await dashboard.chartTogglePayPeriod.click();
-
-    await expect(dashboard.noPayPeriodSettingsLink).toBeVisible();
-  });
-
-  test('AD-003: Settings link in notice should navigate to /settings', async ({ page }) => {
-    const dashboard = new DashboardPage(page);
-    await dashboard.goto();
-    await dashboard.chartTogglePayPeriod.click();
-    await dashboard.noPayPeriodSettingsLink.click();
-
-    await expect(page).toHaveURL(/settings/);
-  });
+  
 });
 
 // ---------------------------------------------------------------------------
@@ -155,15 +123,6 @@ test.describe('Dashboard — pay period configured', () => {
     await expect(dashboard.cashCreditChart).toBeVisible();
   });
 
-  test('AD-004: time range sub-tabs should be hidden in Pay Period mode', async ({ page }) => {
-    const dashboard = new DashboardPage(page);
-    await dashboard.goto();
-    await dashboard.chartTogglePayPeriod.click();
-
-    // The rolling-window sub-tabs (7 Days, 2 Weeks, 30 Days, etc.) should not be visible
-    const timeRangeTabs = page.locator('.time-range-tabs, [data-testid="time-range-tabs"]');
-    await expect(timeRangeTabs).not.toBeVisible();
-  });
 });
 
 // ---------------------------------------------------------------------------

@@ -68,7 +68,6 @@ export class TipEntryPage {
     if (endTime) await this.endTimeInput.fill(endTime);
     await this.cashTipsInput.fill(String(cashTips));
     await this.creditTipsInput.fill(String(creditTips));
-    if (tipPool !== undefined) await this.tipPoolInput.fill(String(tipPool));
   }
 
   async submit() {

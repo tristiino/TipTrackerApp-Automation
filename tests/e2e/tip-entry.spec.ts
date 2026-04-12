@@ -100,7 +100,6 @@ test.describe('Tip Entry Form', () => {
     await tipEntry.goto();
 
     await tipEntry.fillShift({ cashTips: -10, creditTips: 50 });
-    await tipEntry.tipPoolInput.fill('1');
     await tipEntry.submit();
 
     await expect(tipEntry.errorMessage).toBeVisible();
@@ -112,7 +111,6 @@ test.describe('Tip Entry Form', () => {
     await tipEntry.goto();
 
     await tipEntry.fillShift({ cashTips: 50, creditTips: -10 });
-    await tipEntry.tipPoolInput.fill('1');
     await tipEntry.submit();
 
     await expect(tipEntry.errorMessage).toBeVisible();
