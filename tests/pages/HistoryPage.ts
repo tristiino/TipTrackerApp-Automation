@@ -50,9 +50,9 @@ export class HistoryPage {
     this.firstNote          = page.getByRole('cell', { name: '—' }).first();
 
     // Filters
-    this.searchInput      = page.getByPlaceholder(/search shifts/i);
-    this.dateFromInput    = page.getByLabel(/from date/i);
-    this.dateToInput      = page.getByLabel(/to date/i);
+    this.searchInput      = page.getByRole('textbox', { name: 'Search Notes:' });
+    this.dateFromInput    = page.getByRole('textbox', { name: 'Start Date:' });
+    this.dateToInput      = page.getByRole('textbox', { name: 'End Date:' });
     this.tagFilterDropdown = page.locator('[data-testid="tag-filter"]');
     this.clearFiltersButton = page.getByRole('button', { name: /clear/i });
 
