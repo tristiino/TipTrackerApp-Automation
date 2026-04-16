@@ -25,7 +25,7 @@ function addDaysISO(base: Date, days: number): string {
 }
 
 export const SAMPLE_SHIFT = {
-  date: addDaysISO(new Date(), -1),
+  date: addDaysISO(new Date(), 0),
   startTime: '16:00',
   endTime: '23:00',
   hoursWorked: 7,

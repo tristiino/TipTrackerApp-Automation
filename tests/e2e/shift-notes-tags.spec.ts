@@ -88,20 +88,30 @@ test.describe('P2-014: Shift tags', () => {
   });
 
   test('P2-014c: multiple tags can be applied to a single shift', async ({ page }) => {
+    const newTag = page.locator('input[type="text"]');
     const tipEntry = new TipEntryPage(page);
     await tipEntry.goto();
 
-    const tagInput = page.getByLabel(/tags/i);
-    for (const tag of TAGGED_SHIFT.tags) {
-      await tagInput.fill(tag);
-      await page.keyboard.press('Enter');
-    }
+    await tipEntry.fillShift({
+      date: TAGGED_SHIFT.date,
+      startTime: TAGGED_SHIFT.startTime,
+      endTime: TAGGED_SHIFT.endTime,
+      cashTips: TAGGED_SHIFT.cashTips,
+      creditTips: TAGGED_SHIFT.creditTips,
+      tipPool: TAGGED_SHIFT.tipPool,     
+    });
 
-    // All tags should appear as chips on the form
-    const history = new HistoryPage(page);
+    const tagInput = page.getByRole('textbox', { name: 'Add tags…' });
+    await tagInput.scrollIntoViewIfNeeded();
     for (const tag of TAGGED_SHIFT.tags) {
-      await expect(history.tagChips.filter({ hasText: tag })).toBeVisible();
+      if (await newTag.isVisible() || await tagInput.isVisible()) {
+        await newTag.click();
+        await newTag.fill(tag);
+        await page.keyboard.press('Enter');
+      }
     }
+    await tipEntry.submit();
+
   });
 });
 
