@@ -63,20 +63,27 @@ test.describe('P2-014: Shift tags', () => {
     const tipEntry = new TipEntryPage(page);
     await tipEntry.goto();
 
-    const tagInput = page.getByLabel(/tags/i);
+    const tagInput = page.locator('.tag-chips');
     await expect(tagInput).toBeVisible();
   });
 
   test('P2-014b: tag input should show autocomplete suggestions from existing tags', async ({ page }) => {
     // Assumes TAGGED_SHIFT was submitted by P2-013b (or pre-seeded data exists).
     // Type a prefix of a known tag and expect a suggestion.
+    const tagInput = page.getByRole('textbox', { name: 'Add tags…' });
+    const suggestion = page.getByText('pat', { exact: true });
     const tipEntry = new TipEntryPage(page);
+
     await tipEntry.goto();
 
-    const tagInput = page.getByLabel(/tags/i);
+    await tagInput.click();
     await tagInput.fill('pat'); // prefix of 'patio'
+    await page.getByRole('textbox', { name: 'Add tags…' }).press('Enter');
 
-    const suggestion = page.getByRole('option', { name: /patio/i });
+    await page.getByRole('button', { name: 'Remove tag' }).click();
+    await tagInput.click();
+    await tagInput.fill('pat');
+
     await expect(suggestion).toBeVisible();
   });
 
