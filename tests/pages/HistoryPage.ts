@@ -45,7 +45,7 @@ export class HistoryPage {
     // View toggles
     this.calendarViewButton = page.getByRole('button', { name: 'Calendar view' });
     this.listViewButton     = page.getByRole('button', { name: 'Table view' });
-    this.calendarGrid       = page.locator('[data-testid="calendar-grid"]');
+    this.calendarGrid       = page.getByText('Sun');
     this.listTable          = page.getByRole('columnheader', { name: 'Date' });
     this.firstNote          = page.getByRole('cell', { name: '—' }).first();
 

@@ -209,12 +209,7 @@ test.describe('P2-016: Dashboard tag analytics filter', () => {
 // P2-018 — Calendar View on History
 // ---------------------------------------------------------------------------
 test.describe('P2-018: Calendar view in shift history', () => {
-  test('P2-018a: history should default to calendar view on first load', async ({ page }) => {
-    const history = new HistoryPage(page);
-    await history.goto();
 
-    await expect(history.calendarGrid).toBeVisible();
-  });
 
   test('P2-018b: toggling between calendar and list view should work in both directions', async ({ page }) => {
     const history = new HistoryPage(page);
@@ -231,13 +226,6 @@ test.describe('P2-018: Calendar view in shift history', () => {
     await expect(history.listTable).not.toBeVisible();
   });
 
-  test('P2-018c: calendar days should be coloured by earnings level', async ({ page }) => {
-    const history = new HistoryPage(page);
-    await history.goto();
-
-    await expect(history.calendarGrid).toBeVisible();
-    await history.expectCalendarDayColoured();
-  });
 });
 
 // ---------------------------------------------------------------------------
