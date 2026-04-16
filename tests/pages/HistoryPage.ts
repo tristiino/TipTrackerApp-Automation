@@ -53,7 +53,7 @@ export class HistoryPage {
     this.searchInput      = page.getByRole('textbox', { name: 'Search Notes:' });
     this.dateFromInput    = page.getByRole('textbox', { name: 'Start Date:' });
     this.dateToInput      = page.getByRole('textbox', { name: 'End Date:' });
-    this.tagFilterDropdown = page.locator('[data-testid="tag-filter"]');
+    this.tagFilterDropdown = page.getByLabel('Tag:');
     this.clearFiltersButton = page.getByRole('button', { name: /clear/i });
 
     // Rows
@@ -64,7 +64,7 @@ export class HistoryPage {
     this.tagChips       = page.locator('[data-testid="tag-chip"]');
 
     // Dashboard tag filter
-    this.dashboardTagFilter = page.locator('[data-testid="dashboard-tag-filter"]');
+    this.dashboardTagFilter = page.getByRole('combobox').nth(1);
     this.allTagsOption      = page.getByRole('option', { name: /all tags/i });
   }
 
