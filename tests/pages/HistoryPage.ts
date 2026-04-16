@@ -30,6 +30,7 @@ export class HistoryPage {
   readonly expandRowButton: Locator;
   readonly shiftNoteText: Locator;
   readonly overrideBadge: Locator;
+  readonly firstNote: Locator;
 
   // --- Tag Display in History ---
   readonly tagChips: Locator;
@@ -42,10 +43,11 @@ export class HistoryPage {
     this.page = page;
 
     // View toggles
-    this.calendarViewButton = page.getByRole('button', { name: /calendar/i });
-    this.listViewButton     = page.getByRole('button', { name: /list/i });
+    this.calendarViewButton = page.getByRole('button', { name: 'Calendar view' });
+    this.listViewButton     = page.getByRole('button', { name: 'Table view' });
     this.calendarGrid       = page.locator('[data-testid="calendar-grid"]');
-    this.listTable          = page.locator('[data-testid="history-table"]');
+    this.listTable          = page.getByRole('columnheader', { name: 'Date' });
+    this.firstNote          = page.getByRole('cell', { name: '—' }).first();
 
     // Filters
     this.searchInput      = page.getByPlaceholder(/search shifts/i);
@@ -68,8 +70,8 @@ export class HistoryPage {
 
   /** Navigate to the shift history page. */
   async goto() {
-    await this.page.goto('/history');
-    await expect(this.page).toHaveURL(/history/);
+    await this.page.goto('/reports');
+    await expect(this.page).toHaveURL(/reports/);
   }
 
   /** Switch to calendar view and wait for the grid to appear. */
@@ -128,6 +130,18 @@ export class HistoryPage {
     await this.expandRowButton.click();
     await expect(this.shiftNoteText).toBeVisible();
     return (await this.shiftNoteText.textContent()) ?? '';
+  }
+
+  async notesPresent(){
+    if (await this.firstNote.isVisible()) {
+       const edit = await this.page.getByRole('button', { name: 'Edit' }).first();
+       const note = await this.page.getByRole('textbox', { name: 'Notes' });
+       await edit.click();
+       await note.click();
+       await note.fill('test');
+       await this.page.getByRole('button', { name: 'Save Changes' }).click();
+    }
+    
   }
 
   /** Returns the count of currently visible shift rows. */

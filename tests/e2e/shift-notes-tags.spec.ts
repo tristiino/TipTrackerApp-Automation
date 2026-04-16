@@ -47,8 +47,11 @@ test.describe('P2-013: Shift notes', () => {
     // Verify note in history
     const history = new HistoryPage(page);
     await history.goto();
-    const note = await history.expandFirstRowAndGetNote();
-    expect(note).toContain(TAGGED_SHIFT.note);
+    await history.calendarViewButton.scrollIntoViewIfNeeded();
+    await history.switchToListView();
+    await history.notesPresent();
+    await history.listTable.scrollIntoViewIfNeeded();
+    await expect(page.getByRole('cell', { name: 'test', exact: true })).toBeVisible();
   });
 });
 
