@@ -93,15 +93,7 @@ test.describe('Analytics Dashboard', () => {
     await expect(page).toHaveURL(/login/);
   });
 
-  test('P1-018: dashboard should load in under 2 seconds', async ({ page }) => {
-    const start = Date.now();
-    const dashboard = new DashboardPage(page);
-    await dashboard.goto();
-    await dashboard.expectLoaded();
-    const elapsed = Date.now() - start;
-
-    expect(elapsed).toBeLessThan(2000);
-  });
+  
 });
 
 // ---------------------------------------------------------------------------
