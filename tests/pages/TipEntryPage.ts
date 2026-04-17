@@ -20,6 +20,7 @@ export class TipEntryPage {
   readonly errorMessage: Locator;
   readonly tipPoolInput: Locator;
   readonly shiftTypeInput: Locator;
+  readonly notesInput: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -28,6 +29,7 @@ export class TipEntryPage {
     this.endTimeInput = page.getByRole('textbox').nth(2);
     this.hoursDisplay = page.getByText(/Hours Worked/i).locator('..');
     this.cashTipsInput = page.locator('#cashTips');
+    this.notesInput = page.getByLabel(/notes/i);
     this.creditTipsInput = page.locator('#creditTips');
     this.totalTipsDisplay = page.locator('.tip-total-value');
     this.submitButton = page.getByRole('button', { name: 'Submit' });
@@ -54,6 +56,7 @@ export class TipEntryPage {
     cashTips,
     creditTips,
     tipPool,
+    notes,
   }: {
     date?: string;
     startTime?: string;
@@ -61,6 +64,7 @@ export class TipEntryPage {
     cashTips: number;
     creditTips: number;
     tipPool?: number;
+    notes?: string;
   }) {
     if (date) await this.dateInput.fill(date);
     await this.shiftTypeInput.click();
@@ -68,6 +72,7 @@ export class TipEntryPage {
     if (endTime) await this.endTimeInput.fill(endTime);
     await this.cashTipsInput.fill(String(cashTips));
     await this.creditTipsInput.fill(String(creditTips));
+    if (notes) await this.notesInput.fill(notes);
   }
 
   async submit() {
