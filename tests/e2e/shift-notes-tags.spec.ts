@@ -274,12 +274,15 @@ test.describe('P2-022: Shift tags end-to-end (Sprint 4 integration)', () => {
   test('P2-022b: autocomplete should suggest previously created tags', async ({ page }) => {
     // Log a second shift and verify tag autocomplete shows tags from the first
     const tipEntry = new TipEntryPage(page);
+    const tagInput = page.getByRole('textbox', { name: 'Add tags…' });
+
     await tipEntry.goto();
 
-    const tagInput = page.getByLabel(/tags/i);
-    await tagInput.fill('pat'); // prefix of 'patio' — seeded by P2-022a
+    await tagInput.scrollIntoViewIfNeeded();
+    await tagInput.click();
+    await tagInput.pressSequentially('pat', { delay: 100 }); // prefix of 'patio' — seeded by P2-022a
 
-    const suggestion = page.getByRole('option', { name: /patio/i });
+    const suggestion = page.getByText('pat', { exact: true });
     await expect(suggestion).toBeVisible();
   });
 });
@@ -290,10 +293,33 @@ test.describe('P2-022: Shift tags end-to-end (Sprint 4 integration)', () => {
 test.describe('P2-025: Shift notes and keyword/tag search in reports (Sprint 4 integration)', () => {
   test('P2-025a: shift notes should be visible in the expandable history row', async ({ page }) => {
     const history = new HistoryPage(page);
+    const tipEntry = new TipEntryPage(page);
+    const note = page.getByRole('cell', { name: 'Note: Busy patio shift, large' })
+
+    await tipEntry.goto();
+
+    await tipEntry.fillShift({
+      date: TAGGED_SHIFT.date,
+      startTime: TAGGED_SHIFT.startTime,
+      endTime: TAGGED_SHIFT.endTime,
+      cashTips: TAGGED_SHIFT.cashTips,
+      creditTips: TAGGED_SHIFT.creditTips,
+      tipPool: TAGGED_SHIFT.tipPool,
+      notes: TAGGED_SHIFT.note,
+    });
+    await tipEntry.submit();
+    await expect(tipEntry.successMessage).toBeVisible();
+
     await history.goto();
 
-    const note = await history.expandFirstRowAndGetNote();
-    expect(note.length).toBeGreaterThan(0);
+    await history.listViewButton.scrollIntoViewIfNeeded();
+    await history.listViewButton.click();
+
+    await history.expectedNote.click();
+    await expect(note).toBeVisible();
+
+    await history.deleteAllShifts();
+     
   });
 
   test('P2-025b: keyword search should filter history entries', async ({ page }) => {

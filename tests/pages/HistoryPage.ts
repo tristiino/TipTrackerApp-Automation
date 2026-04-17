@@ -34,7 +34,8 @@ export class HistoryPage {
   readonly shiftNoteText: Locator;
   readonly overrideBadge: Locator;
   readonly firstNote: Locator;
-  readonly noteCell: Locator; 
+  readonly noteCell: Locator;
+  readonly expectedNote: Locator; 
 
   // --- Tag Display in History ---
   readonly tagChips: Locator;
@@ -72,6 +73,7 @@ export class HistoryPage {
     this.shiftNoteText  = page.locator('[data-testid="shift-note"]');
     this.overrideBadge  = page.locator('[data-testid="override-badge"]');
     this.tagChips       = page.getByRole('cell', { name: 'Tags: event busy night patio' });
+    this.expectedNote   = page.getByRole('cell', { name: 'Busy patio shift, large party of' });
 
     // Dashboard tag filter
     this.dashboardTagFilter = page.getByRole('combobox').nth(1);
