@@ -34,6 +34,7 @@ export class HistoryPage {
   readonly shiftNoteText: Locator;
   readonly overrideBadge: Locator;
   readonly firstNote: Locator;
+  readonly noteCell: Locator; 
 
   // --- Tag Display in History ---
   readonly tagChips: Locator;
@@ -56,6 +57,7 @@ export class HistoryPage {
     this.calendarGrid       = page.getByText('Sun');
     this.listTable          = page.getByRole('columnheader', { name: 'Date' });
     this.firstNote          = page.getByRole('cell', { name: '—' }).first();
+    this.noteCell           = page.getByRole('cell', { name: '—' });
 
     // Filters
     this.searchInput      = page.getByRole('textbox', { name: 'Search Notes:' });
@@ -69,7 +71,7 @@ export class HistoryPage {
     this.expandRowButton = page.locator('[data-testid="expand-shift"]').first();
     this.shiftNoteText  = page.locator('[data-testid="shift-note"]');
     this.overrideBadge  = page.locator('[data-testid="override-badge"]');
-    this.tagChips       = page.locator('[data-testid="tag-chip"]');
+    this.tagChips       = page.getByRole('cell', { name: 'Tags: event busy night patio' });
 
     // Dashboard tag filter
     this.dashboardTagFilter = page.getByRole('combobox').nth(1);
