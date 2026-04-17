@@ -52,6 +52,10 @@ test.describe('P2-013: Shift notes', () => {
     await history.notesPresent();
     await history.listTable.scrollIntoViewIfNeeded();
     await expect(page.getByRole('cell', { name: 'test', exact: true })).toBeVisible();
+
+    await history.goto();
+    await history.listViewButton.click();
+    await history.deleteAllShifts();
   });
 });
 
@@ -90,6 +94,7 @@ test.describe('P2-014: Shift tags', () => {
   test('P2-014c: multiple tags can be applied to a single shift', async ({ page }) => {
     const newTag = page.locator('input[type="text"]');
     const tipEntry = new TipEntryPage(page);
+    const history = new HistoryPage(page);
     await tipEntry.goto();
 
     await tipEntry.fillShift({
@@ -111,6 +116,10 @@ test.describe('P2-014: Shift tags', () => {
       }
     }
     await tipEntry.submit();
+
+    await history.goto();
+    await history.listViewButton.click();
+    await history.deleteAllShifts();
 
   });
 });
