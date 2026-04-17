@@ -38,9 +38,8 @@ test.describe('P2-013: Shift notes', () => {
       endTime: TAGGED_SHIFT.endTime,
       cashTips: TAGGED_SHIFT.cashTips,
       creditTips: TAGGED_SHIFT.creditTips,
-      tipPool: TAGGED_SHIFT.tipPool,
+      notes: TAGGED_SHIFT.note,
     });
-    await page.getByLabel(/notes/i).fill(TAGGED_SHIFT.note);
     await tipEntry.submit();
     await expect(tipEntry.successMessage).toBeVisible();
 
@@ -49,9 +48,8 @@ test.describe('P2-013: Shift notes', () => {
     await history.goto();
     await history.calendarViewButton.scrollIntoViewIfNeeded();
     await history.switchToListView();
-    await history.notesPresent();
     await history.listTable.scrollIntoViewIfNeeded();
-    await expect(page.getByRole('cell', { name: 'test', exact: true })).toBeVisible();
+    await expect(history.expectedNote).toBeVisible();
 
     await history.goto();
     await history.listViewButton.click();
@@ -222,6 +220,19 @@ test.describe('P2-018: Calendar view in shift history', () => {
 
   test('P2-018b: toggling between calendar and list view should work in both directions', async ({ page }) => {
     const history = new HistoryPage(page);
+    const tipEntry = new TipEntryPage(page);
+
+    await tipEntry.goto();
+    await tipEntry.fillShift({
+      date: TAGGED_SHIFT.date,
+      startTime: TAGGED_SHIFT.startTime,
+      endTime: TAGGED_SHIFT.endTime,
+      cashTips: TAGGED_SHIFT.cashTips,
+      creditTips: TAGGED_SHIFT.creditTips,
+      notes: TAGGED_SHIFT.note,
+    });
+    await tipEntry.submit();
+    
     await history.goto();
 
     // Calendar → List
@@ -233,6 +244,8 @@ test.describe('P2-018: Calendar view in shift history', () => {
     await history.switchToCalendarView();
     await expect(history.calendarGrid).toBeVisible();
     await expect(history.listTable).not.toBeVisible();
+
+    await history.deleteAllShifts();
   });
 
 });
