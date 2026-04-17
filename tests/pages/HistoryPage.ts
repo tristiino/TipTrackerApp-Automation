@@ -18,6 +18,9 @@ export class HistoryPage {
   readonly calendarGrid: Locator;
   readonly listTable: Locator;
 
+  // --- Delete Shifts ---
+  readonly deleteShiftButton: Locator;
+
   // --- Search & Filters ---
   readonly searchInput: Locator;
   readonly dateFromInput: Locator;
@@ -45,6 +48,11 @@ export class HistoryPage {
     // View toggles
     this.calendarViewButton = page.getByRole('button', { name: 'Calendar view' });
     this.listViewButton     = page.getByRole('button', { name: 'Table view' });
+
+    // Delete shifts
+    this.deleteShiftButton = page.getByRole('button', { name: 'Delete' }).first();
+
+    // history view
     this.calendarGrid       = page.getByText('Sun');
     this.listTable          = page.getByRole('columnheader', { name: 'Date' });
     this.firstNote          = page.getByRole('cell', { name: '—' }).first();
@@ -147,6 +155,18 @@ export class HistoryPage {
   /** Returns the count of currently visible shift rows. */
   async getVisibleRowCount(): Promise<number> {
     return this.shiftRows.count();
+  }
+
+  /** Navigates to list view and deletes every tip entry one by one. */
+  async deleteAllShifts() {
+    await this.goto();
+    await this.listViewButton.click();
+    await expect(this.listTable).toBeVisible();
+    while (await this.deleteShiftButton.isVisible()) {
+      this.page.once('dialog', dialog => dialog.accept());
+      await this.deleteShiftButton.click();
+      await this.page.waitForTimeout(1000);
+    }
   }
 
   /**
