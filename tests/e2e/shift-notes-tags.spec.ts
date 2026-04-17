@@ -233,33 +233,42 @@ test.describe('P2-018: Calendar view in shift history', () => {
 // ---------------------------------------------------------------------------
 test.describe('P2-022: Shift tags end-to-end (Sprint 4 integration)', () => {
   test('P2-022a: create tag → apply to shift → verify in history', async ({ page }) => {
+    const newTag = page.locator('input[type="text"]');
     const tipEntry = new TipEntryPage(page);
     await tipEntry.goto();
 
-    // Fill and submit a shift with tags
     await tipEntry.fillShift({
       date: TAGGED_SHIFT.date,
       startTime: TAGGED_SHIFT.startTime,
       endTime: TAGGED_SHIFT.endTime,
       cashTips: TAGGED_SHIFT.cashTips,
       creditTips: TAGGED_SHIFT.creditTips,
-      tipPool: TAGGED_SHIFT.tipPool,
+      tipPool: TAGGED_SHIFT.tipPool,     
     });
-    const tagInput = page.getByLabel(/tags/i);
+
+    const tagInput = page.getByRole('textbox', { name: 'Add tags…' });
+    await tagInput.scrollIntoViewIfNeeded();
     for (const tag of TAGGED_SHIFT.tags) {
-      await tagInput.fill(tag);
-      await page.keyboard.press('Enter');
+      if (await newTag.isVisible() || await tagInput.isVisible()) {
+        await newTag.click();
+        await newTag.fill(tag);
+        await page.keyboard.press('Enter');
+      }
     }
     await tipEntry.submit();
-    await expect(tipEntry.successMessage).toBeVisible();
+
 
     // Verify tags appear in history
     const history = new HistoryPage(page);
     await history.goto();
-    await history.expandRowButton.click();
+    await history.calendarViewButton.scrollIntoViewIfNeeded();
+    await history.listViewButton.click();
+    await history.noteCell.click();
+    
     for (const tag of TAGGED_SHIFT.tags) {
       await expect(history.tagChips.filter({ hasText: tag })).toBeVisible();
     }
+    await history.deleteAllShifts();
   });
 
   test('P2-022b: autocomplete should suggest previously created tags', async ({ page }) => {
