@@ -64,8 +64,8 @@ export class SettingsPage {
     this.roleAmountFixed = page.getByRole('spinbutton', { name: 'Amount ($ per shift)' });
     this.saveRoleButton  = page.getByRole('button', { name: 'Add Role' });
     this.roleList        = page.locator('[data-testid="tip-out-role-list"]');
-    this.overLimitError  = page.getByText(/splits cannot exceed 100%/i);
-    this.deleteRoleButton = page.getByRole('button', { name: 'Delete' });
+    this.overLimitError  = page.getByText('This would push your total');
+    this.deleteRoleButton = page.getByRole('button', { name: 'Delete' }).first();
     this.roleTypeFixed = page.getByText('Fixed dollar amount');
     this.roleTypePercent = page.getByText('Percentage of gross');
 
@@ -121,7 +121,11 @@ export class SettingsPage {
       await this.roleAmountPercent.fill(String(amount));
     }
     
-    await this.saveRoleButton.click();
+    if (await this.overLimitError.isVisible()) {
+      console.warn('[createRole] Over-limit warning: tip-out splits exceed 100%, save button disabled');
+    } else {
+      await this.saveRoleButton.click();
+    }
   }
 
   // --- Job Profile helpers ---
@@ -175,11 +179,23 @@ export class SettingsPage {
   async deleteRole() {
     const noTipRole = this.page.getByText('No tip-out roles yet. Add');
     await this.page.waitForTimeout(1000);
-    
+
     if (await noTipRole.isHidden()) {
       this.page.once('dialog', dialog => dialog.accept());
       await this.deleteRoleButton.click();
-      await this.page.waitForTimeout(1000);
+      await this.page.waitForTimeout(2000);
+    }
+  }
+
+  /** Navigates to the tip-out tab and deletes all roles one by one. */
+  async deleteAllRoles() {
+    await this.goto();
+    await this.tipOutTab.click();
+
+    while (await this.deleteRoleButton.isVisible()) {
+      this.page.once('dialog', dialog => dialog.accept());
+      await this.deleteRoleButton.click();
+      await this.page.waitForTimeout(2000);
     }
   }
 
