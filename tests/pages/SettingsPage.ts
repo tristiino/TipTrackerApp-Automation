@@ -174,6 +174,7 @@ export class SettingsPage {
     // delete tip out role
   async deleteRole() {
     const noTipRole = this.page.getByText('No tip-out roles yet. Add');
+    await this.page.waitForTimeout(1000);
     
     if (await noTipRole.isHidden()) {
       this.page.once('dialog', dialog => dialog.accept());

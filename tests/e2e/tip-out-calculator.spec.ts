@@ -93,6 +93,10 @@ test.describe('P2-002: Tip-out template selector', () => {
     await tipOut.gotoTipEntry();
 
     await expect(tipOut.tipOutTemplate).toBeVisible();
+
+    await settings.goto();
+    await settings.tipOutTab.click();
+    await settings.deleteRole();
   });
 
   test('P2-002b: should auto-calculate deductions when a template is selected', async ({ page }) => {
