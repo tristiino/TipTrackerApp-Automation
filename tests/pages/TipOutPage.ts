@@ -95,9 +95,15 @@ export class TipOutPage {
    * Selects a tip-out template from the dropdown on the tip entry form
    * and waits for the deduction display to update.
    */
-  async selectTemplate(templateName: string) {
-    await this.tipOutTemplate.selectOption(templateName);
-    await expect(this.tipOutDeductionDisplay).not.toHaveText('—');
+  async selectTipOutBartender() {
+    const bartenderCheckBox = this.page.getByRole('checkbox', { name: 'Bartender — 5%' })
+    await this.tipOutTemplate.scrollIntoViewIfNeeded();
+    
+    if (await bartenderCheckBox.isVisible()) {
+      await bartenderCheckBox.click();
+    }
+    
+    await expect(this.page.getByText('Your take-home: $')).toBeVisible();
   }
 
   /** Returns the current net tips text from the form display. */

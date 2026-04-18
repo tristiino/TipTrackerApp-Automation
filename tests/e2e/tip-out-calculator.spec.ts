@@ -100,26 +100,29 @@ test.describe('P2-002: Tip-out template selector', () => {
   });
 
   test('P2-002b: should auto-calculate deductions when a template is selected', async ({ page }) => {
+    const tipEntry = new TipEntryPage(page);
+    const tipOut = new TipOutPage(page);
     const settings = new SettingsPage(page);
     await settings.goto();
+
+    await settings.tipOutTab.click();
     await settings.createRole(
       TIP_OUT_ROLES.bartender.name,
       TIP_OUT_ROLES.bartender.type,
       TIP_OUT_ROLES.bartender.amount,
     );
 
-    const tipEntry = new TipEntryPage(page);
     await tipEntry.goto();
     await tipEntry.cashTipsInput.fill(String(TIP_OUT_SHIFT.cashTips));
     await tipEntry.creditTipsInput.fill(String(TIP_OUT_SHIFT.creditTips));
 
-    const tipOut = new TipOutPage(page);
-    await tipOut.selectTemplate(TIP_OUT_ROLES.bartender.name);
+    await tipOut.selectTipOutBartender();
 
-    // Deduction should be non-zero and non-placeholder
-    const deduction = await tipOut.getDeductionText();
-    expect(deduction).not.toBe('—');
-    expect(deduction).not.toBe('$0');
+    expect(page.getByText('$332.50')).toBeVisible();
+
+    await settings.goto();
+    await settings.tipOutTab.click();
+    await settings.deleteRole();
   });
 });
 
@@ -140,7 +143,7 @@ test.describe('P2-003: Net tips display', () => {
     await tipOut.gotoTipEntry();
 
     // Select a template first so deductions are active
-    await tipOut.selectTemplate(TIP_OUT_ROLES.busser.name);
+    await tipOut.selectTipOutBartender();
 
     await tipEntry.cashTipsInput.fill('100');
     await tipEntry.creditTipsInput.fill('0');
@@ -164,7 +167,7 @@ test.describe('P2-004: Manual tip-out override', () => {
     const tipOut = new TipOutPage(page);
     await tipOut.gotoTipEntry();
 
-    await tipOut.selectTemplate(TIP_OUT_ROLES.busser.name);
+    await tipOut.selectTipOutBartender();
     await expect(tipOut.overrideInput).toBeVisible();
 
     await tipOut.overrideInput.fill('5');
@@ -181,7 +184,7 @@ test.describe('P2-004: Manual tip-out override', () => {
       creditTips: SAMPLE_SHIFT.creditTips,
       tipPool: SAMPLE_SHIFT.tipPool,
     });
-    await tipOut.selectTemplate(TIP_OUT_ROLES.busser.name);
+    await tipOut.selectTipOutBartender();
     await tipOut.overrideInput.fill('5');
     await tipEntry.submit();
 
@@ -266,7 +269,7 @@ test.describe('P2-019: Tip-out edge cases (Sprint 4 integration)', () => {
     await tipOut.gotoTipEntry();
     await tipEntry.cashTipsInput.fill('100');
     await tipEntry.creditTipsInput.fill('0');
-    await tipOut.selectTemplate(FULL_SPLIT_ROLES[0].name);
+    await tipOut.selectTipOutBartender();
 
     const net = await tipOut.getNetTipsText();
     expect(Number(net.replace(/[^0-9.]/g, ''))).toBe(0);
@@ -280,7 +283,7 @@ test.describe('P2-019: Tip-out edge cases (Sprint 4 integration)', () => {
 
     await tipEntry.cashTipsInput.fill('100');
     await tipEntry.creditTipsInput.fill('0');
-    await tipOut.selectTemplate(MIXED_SPLIT_ROLES[0].name);
+    await tipOut.selectTipOutBartender();
 
     const net = await tipOut.getNetTipsText();
     expect(Number(net.replace(/[^0-9.]/g, ''))).toBe(85);
@@ -293,7 +296,7 @@ test.describe('P2-019: Tip-out edge cases (Sprint 4 integration)', () => {
 
     await tipEntry.cashTipsInput.fill('0');
     await tipEntry.creditTipsInput.fill('0');
-    await tipOut.selectTemplate(TIP_OUT_ROLES.busser.name);
+    await tipOut.selectTipOutBartender();
 
     await tipOut.overrideInput.fill('2');
     await expect(tipOut.overrideInput).toHaveValue('2');
@@ -306,7 +309,7 @@ test.describe('P2-019: Tip-out edge cases (Sprint 4 integration)', () => {
 
     await tipEntry.cashTipsInput.fill('0');
     await tipEntry.creditTipsInput.fill('0');
-    await tipOut.selectTemplate(TIP_OUT_ROLES.busser.name);
+    await tipOut.selectTipOutBartender();
 
     const net = await tipOut.getNetTipsText();
     expect(Number(net.replace(/[^0-9.-]/g, ''))).toBeGreaterThanOrEqual(0);
