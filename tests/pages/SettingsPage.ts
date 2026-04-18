@@ -27,6 +27,7 @@ export class SettingsPage {
   readonly saveRoleButton: Locator;
   readonly roleList: Locator;
   readonly overLimitError: Locator;
+  readonly deleteRoleButton: Locator;
 
   // --- Job Profiles (P2-007) ---
   readonly noJobCard: Locator;
@@ -56,10 +57,11 @@ export class SettingsPage {
     this.addRoleButton   = page.getByRole('button', { name: '+ Add Tip-Out Role' });
     this.roleNameInput   = page.getByLabel(/role name/i);
     this.roleTypeSelect  = page.getByLabel(/role type/i);
-    this.roleAmountInput = page.getByLabel(/amount/i);
-    this.saveRoleButton  = page.getByRole('button', { name: /save role/i });
+    this.roleAmountInput = page.getByRole('spinbutton', { name: 'Amount (% of gross tips)' });
+    this.saveRoleButton  = page.getByRole('button', { name: 'Add Role' });
     this.roleList        = page.locator('[data-testid="tip-out-role-list"]');
     this.overLimitError  = page.getByText(/splits cannot exceed 100%/i);
+    this.deleteRoleButton      = page.getByRole('button', { name: 'Delete' });
 
     // Job Profiles
     this.noJobCard       = page.locator('div').filter({ hasText: /^No jobs yet\. Add your first job to start tagging shifts\.$/ })
@@ -104,7 +106,7 @@ export class SettingsPage {
   async createRole(name: string, type: 'percent' | 'fixed', amount: number) {
     await this.addRoleButton.click();
     await this.roleNameInput.fill(name);
-    await this.roleTypeSelect.selectOption(type);
+    
     await this.roleAmountInput.fill(String(amount));
     await this.saveRoleButton.click();
   }
@@ -155,4 +157,16 @@ export class SettingsPage {
       await this.confirmDeleteButton.click();
     }
   }
+
+    // delete tip out role
+  async deleteRole() {
+    const tipRole = this.page.getByText('Busser');
+    
+    if (await tipRole.isVisible()) {
+      this.page.once('dialog', dialog => dialog.accept());
+      await this.deleteRoleButton.click();
+      await this.page.waitForTimeout(1000);
+    }
+  }
+
 }
