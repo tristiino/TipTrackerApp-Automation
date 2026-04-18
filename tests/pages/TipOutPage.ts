@@ -30,8 +30,8 @@ export class TipOutPage {
 
   // --- Dashboard: Gross / Net Toggle ---
   readonly grossNetToggle: Locator;
-  readonly grossNetToggleNet: Locator;
-  readonly grossNetToggleGross: Locator;
+  readonly netToggle: Locator;
+  readonly grossToggle: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -48,15 +48,15 @@ export class TipOutPage {
     // Tip entry form
     this.tipOutTemplate = page.getByText('Tip-Outs');
     this.tipOutDeductionDisplay = page.locator('[data-testid="tip-out-deduction"]');
-    this.netTipsDisplay         = page.locator('[data-testid="net-tips"]');
+    this.netTipsDisplay         = page.getByText('Total$');
     this.grossTipsDisplay       = page.locator('[data-testid="gross-tips"]');
     this.overrideInput          = page.locator('[data-testid="tip-out-override"]');
     this.overrideBadge          = page.locator('[data-testid="override-badge"]');
 
     // Dashboard toggle
     this.grossNetToggle      = page.locator('[data-testid="gross-net-toggle"]');
-    this.grossNetToggleNet   = page.getByRole('button', { name: /^net$/i });
-    this.grossNetToggleGross = page.getByRole('button', { name: /^gross$/i });
+    this.netToggle   = page.getByRole('button', { name: 'Net Earnings' });
+    this.grossToggle = page.getByRole('button', { name: 'Gross Tips' });
   }
 
   /** Navigate to the tip-out section in settings. */
@@ -98,7 +98,7 @@ export class TipOutPage {
   async selectTipOutBartender() {
     const bartenderCheckBox = this.page.getByRole('checkbox', { name: 'Bartender — 5%' })
     await this.tipOutTemplate.scrollIntoViewIfNeeded();
-    
+
     if (await bartenderCheckBox.isVisible()) {
       await bartenderCheckBox.click();
     }
