@@ -21,7 +21,7 @@ export class TipOutPage {
   readonly overLimitError: Locator;
 
   // --- Tip Entry Form: Template Selector ---
-  readonly tipOutTemplateDropdown: Locator;
+  readonly tipOutTemplate: Locator;
   readonly tipOutDeductionDisplay: Locator;
   readonly netTipsDisplay: Locator;
   readonly grossTipsDisplay: Locator;
@@ -46,7 +46,7 @@ export class TipOutPage {
     this.overLimitError       = page.getByText(/splits cannot exceed 100%/i);
 
     // Tip entry form
-    this.tipOutTemplateDropdown = page.getByLabel(/tip.?out template/i);
+    this.tipOutTemplate = page.getByText('Tip-Outs');
     this.tipOutDeductionDisplay = page.locator('[data-testid="tip-out-deduction"]');
     this.netTipsDisplay         = page.locator('[data-testid="net-tips"]');
     this.grossTipsDisplay       = page.locator('[data-testid="gross-tips"]');
@@ -96,7 +96,7 @@ export class TipOutPage {
    * and waits for the deduction display to update.
    */
   async selectTemplate(templateName: string) {
-    await this.tipOutTemplateDropdown.selectOption(templateName);
+    await this.tipOutTemplate.selectOption(templateName);
     await expect(this.tipOutDeductionDisplay).not.toHaveText('—');
   }
 

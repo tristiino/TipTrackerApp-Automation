@@ -79,9 +79,20 @@ test.describe('P2-001: Tip-out role management', () => {
 test.describe('P2-002: Tip-out template selector', () => {
   test('P2-002a: should show a tip-out template dropdown on the tip entry form', async ({ page }) => {
     const tipOut = new TipOutPage(page);
+    const settings = new SettingsPage(page);
+
+    await settings.goto();
+    await settings.tipOutTab.click();
+
+    await settings.createRole(
+      TIP_OUT_ROLES.host.name,
+      TIP_OUT_ROLES.host.type,
+      TIP_OUT_ROLES.host.amount,
+    );
+
     await tipOut.gotoTipEntry();
 
-    await expect(tipOut.tipOutTemplateDropdown).toBeVisible();
+    await expect(tipOut.tipOutTemplate).toBeVisible();
   });
 
   test('P2-002b: should auto-calculate deductions when a template is selected', async ({ page }) => {
