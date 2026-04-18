@@ -19,6 +19,7 @@ export class SettingsPage {
   readonly resetButton: Locator;
 
   // --- Tip-Out Roles (P2-001) ---
+  readonly tipOutTab: Locator;
   readonly addRoleButton: Locator;
   readonly roleNameInput: Locator;
   readonly roleTypeSelect: Locator;
@@ -51,7 +52,8 @@ export class SettingsPage {
     this.resetButton         = page.getByRole('button', { name: 'Reset' });
 
     // Tip-Out Roles
-    this.addRoleButton   = page.getByRole('button', { name: /add role/i });
+    this.tipOutTab       = page.getByRole('button', { name: 'Tip-Outs' });
+    this.addRoleButton   = page.getByRole('button', { name: '+ Add Tip-Out Role' });
     this.roleNameInput   = page.getByLabel(/role name/i);
     this.roleTypeSelect  = page.getByLabel(/role type/i);
     this.roleAmountInput = page.getByLabel(/amount/i);

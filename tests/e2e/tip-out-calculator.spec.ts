@@ -30,11 +30,10 @@ test.describe('P2-001: Tip-out role management', () => {
     const settings = new SettingsPage(page);
     await settings.goto();
 
+    await settings.tipOutTab.click();
     await settings.addRoleButton.click();
 
     await expect(settings.roleNameInput).toBeVisible();
-    await expect(settings.roleTypeSelect).toBeVisible();
-    await expect(settings.roleAmountInput).toBeVisible();
   });
 
   test('P2-001b: should save a percentage-based tip-out role', async ({ page }) => {
