@@ -23,11 +23,14 @@ export class SettingsPage {
   readonly addRoleButton: Locator;
   readonly roleNameInput: Locator;
   readonly roleTypeSelect: Locator;
-  readonly roleAmountInput: Locator;
+  readonly roleAmountPercent: Locator;
+  readonly roleAmountFixed: Locator;
   readonly saveRoleButton: Locator;
   readonly roleList: Locator;
   readonly overLimitError: Locator;
   readonly deleteRoleButton: Locator;
+  readonly roleTypeFixed: Locator;
+  readonly roleTypePercent: Locator;
 
   // --- Job Profiles (P2-007) ---
   readonly noJobCard: Locator;
@@ -57,11 +60,14 @@ export class SettingsPage {
     this.addRoleButton   = page.getByRole('button', { name: '+ Add Tip-Out Role' });
     this.roleNameInput   = page.getByLabel(/role name/i);
     this.roleTypeSelect  = page.getByLabel(/role type/i);
-    this.roleAmountInput = page.getByRole('spinbutton', { name: 'Amount (% of gross tips)' });
+    this.roleAmountPercent = page.getByRole('spinbutton', { name: 'Amount (% of gross tips)' });
+    this.roleAmountFixed = page.getByRole('spinbutton', { name: 'Amount ($ per shift)' });
     this.saveRoleButton  = page.getByRole('button', { name: 'Add Role' });
     this.roleList        = page.locator('[data-testid="tip-out-role-list"]');
     this.overLimitError  = page.getByText(/splits cannot exceed 100%/i);
-    this.deleteRoleButton      = page.getByRole('button', { name: 'Delete' });
+    this.deleteRoleButton = page.getByRole('button', { name: 'Delete' });
+    this.roleTypeFixed = page.getByText('Fixed dollar amount');
+    this.roleTypePercent = page.getByText('Percentage of gross');
 
     // Job Profiles
     this.noJobCard       = page.locator('div').filter({ hasText: /^No jobs yet\. Add your first job to start tagging shifts\.$/ })
@@ -107,7 +113,14 @@ export class SettingsPage {
     await this.addRoleButton.click();
     await this.roleNameInput.fill(name);
     
-    await this.roleAmountInput.fill(String(amount));
+    if (type === 'fixed') {
+      await this.roleTypeFixed.click();
+      await this.roleAmountFixed.fill(String(amount));
+    } else {
+      await this.roleTypePercent.click();
+      await this.roleAmountPercent.fill(String(amount));
+    }
+    
     await this.saveRoleButton.click();
   }
 
@@ -160,9 +173,9 @@ export class SettingsPage {
 
     // delete tip out role
   async deleteRole() {
-    const tipRole = this.page.getByText('Busser');
+    const noTipRole = this.page.getByText('No tip-out roles yet. Add');
     
-    if (await tipRole.isVisible()) {
+    if (await noTipRole.isHidden()) {
       this.page.once('dialog', dialog => dialog.accept());
       await this.deleteRoleButton.click();
       await this.page.waitForTimeout(1000);

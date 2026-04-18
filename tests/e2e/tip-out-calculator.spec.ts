@@ -38,7 +38,7 @@ test.describe('P2-001: Tip-out role management', () => {
 
   test('P2-001b: should save a percentage-based tip-out role', async ({ page }) => {
     const settings = new SettingsPage(page);
-    const tipRole = page.getByText('Busser')
+    const tipRole = page.getByText('Busser');
     
     await settings.goto();
 
@@ -56,7 +56,11 @@ test.describe('P2-001: Tip-out role management', () => {
 
   test('P2-001c: should save a fixed-dollar tip-out role', async ({ page }) => {
     const settings = new SettingsPage(page);
+    const tipRole = page.getByText('host');
+
     await settings.goto();
+    await settings.tipOutTab.click();
+    
 
     await settings.createRole(
       TIP_OUT_ROLES.host.name,
@@ -64,7 +68,8 @@ test.describe('P2-001: Tip-out role management', () => {
       TIP_OUT_ROLES.host.amount,
     );
 
-    await expect(settings.roleList).toContainText(TIP_OUT_ROLES.host.name);
+    await expect(tipRole).toContainText(TIP_OUT_ROLES.host.name);
+    await settings.deleteRole();
   });
 });
 
