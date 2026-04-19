@@ -80,7 +80,6 @@ test.describe('P2-008: Job selector on tip entry form', () => {
     const tipEntry = new TipEntryPage(page);
 
     await settings.goto();
-
     await settings.jobTab.click();
 
     while ((await settings.noJobCard.isVisible())) {
@@ -97,11 +96,16 @@ test.describe('P2-008: Job selector on tip entry form', () => {
     await tipEntry.notesInput.scrollIntoViewIfNeeded();
     await tipEntry.jobSelectorPrimary.selectOption({ label: 'The Rooftop · Downtown' });
     await expect(tipEntry.jobSelectorPrimary.locator('option:checked')).toHaveText('The Rooftop · Downtown');
+
+    await settings.deleteAllJobs();
   });
 
   test('P2-008b: job selector should default to the most recently used job', async ({ page }) => {
     // Create two jobs; log a shift for the secondary one
     const settings = new SettingsPage(page);
+    const tipEntry = new TipEntryPage(page);
+    const history = new HistoryPage(page);
+    
     await settings.goto();
     await settings.createJob(
       JOB_PROFILES.primary.name,
@@ -115,18 +119,32 @@ test.describe('P2-008: Job selector on tip entry form', () => {
     );
 
     // Log a shift for the secondary job
-    const tipEntry = new TipEntryPage(page);
-    const job      = new JobProfilePage(page);
-    await job.gotoTipEntry();
-    await job.jobSelectorDropdown.selectOption(JOB_PROFILES.secondary.name);
-    await tipEntry.fillShift({ cashTips: SAMPLE_SHIFT.cashTips, creditTips: SAMPLE_SHIFT.creditTips });
+    await tipEntry.goto();
+
+     await tipEntry.fillShift({
+      date: SAMPLE_SHIFT.date,
+      startTime: SAMPLE_SHIFT.startTime,
+      endTime: SAMPLE_SHIFT.endTime,
+      cashTips: SAMPLE_SHIFT.cashTips,
+      creditTips: SAMPLE_SHIFT.creditTips,
+    });
+
+    await tipEntry.jobSelectorPrimary.click();
+    await tipEntry.jobSelectorPrimary.selectOption({ label: 'Brunch Spot · Midtown' });
     await tipEntry.submit();
+    await expect(tipEntry.successMessage).toBeVisible();
+
+    await history.goto();
+    await history.listViewButton.scrollIntoViewIfNeeded();
+    await history.listViewButton.click();
+    await expect(history.noTipsFound).toBeHidden();
 
     // Re-open the form — secondary should still be selected
-    await job.gotoTipEntry();
-    await expect(job.jobSelectorDropdown).toHaveValue(
-      new RegExp(JOB_PROFILES.secondary.name, 'i'),
-    );
+    await tipEntry.goto();
+    await expect(tipEntry.jobSelectorPrimary.locator('option:checked')).toHaveText('Brunch Spot · Midtown');
+
+    await history.deleteAllShifts();
+    await settings.deleteAllJobs();
   });
 });
 
