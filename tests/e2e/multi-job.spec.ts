@@ -24,9 +24,10 @@ test.describe('P2-007: Job profile management', () => {
   test('P2-007a: should allow creating a job profile with name, location, and hourly rate', async ({ page }) => {
     const settings = new SettingsPage(page);
     await settings.goto();
+    
     await settings.jobTab.click();
 
-    if ((await settings.noJobCard.isVisible())) {
+    while ((await settings.noJobCard.isVisible())) {
       await settings.createJob(
         JOB_PROFILES.primary.name,
         JOB_PROFILES.primary.location,
