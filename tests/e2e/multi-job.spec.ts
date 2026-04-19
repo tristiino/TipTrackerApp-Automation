@@ -69,7 +69,6 @@ test.describe('P2-007: Job profile management', () => {
     await expect(settings.primaryJob).toContainText('The Rooftop — Updated');
     await settings.deleteJob();
   });
-
 });
 
 // ---------------------------------------------------------------------------
