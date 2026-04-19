@@ -27,6 +27,7 @@ export class HistoryPage {
   readonly dateToInput: Locator;
   readonly tagFilterDropdown: Locator;
   readonly clearFiltersButton: Locator;
+  readonly jobFilterDropdown: Locator;
 
   // --- History Rows ---
   readonly shiftRows: Locator;
@@ -68,6 +69,7 @@ export class HistoryPage {
     this.dateToInput      = page.getByRole('textbox', { name: 'End Date:' });
     this.tagFilterDropdown = page.getByLabel('Tag:');
     this.clearFiltersButton = page.getByRole('button', { name: /clear/i });
+    this.jobFilterDropdown = page.getByLabel('Job:');
 
     // Rows
     this.shiftRows      = page.locator('[data-testid="shift-row"]');
