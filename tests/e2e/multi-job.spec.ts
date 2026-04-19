@@ -153,10 +153,20 @@ test.describe('P2-008: Job selector on tip entry form', () => {
 // ---------------------------------------------------------------------------
 test.describe('P2-009: History page job filter', () => {
   test('P2-009a: history page should show a job filter dropdown', async ({ page }) => {
-    const job = new JobProfilePage(page);
-    await job.gotoHistory();
+    const history = new HistoryPage(page);
+    const settings = new SettingsPage(page);
 
-    await expect(job.jobFilterDropdown).toBeVisible();
+    await settings.goto();
+    await settings.createJob(
+      JOB_PROFILES.primary.name,
+      JOB_PROFILES.primary.location,
+      JOB_PROFILES.primary.hourlyRate,
+    );
+    
+    await history.goto();
+    await expect(history.jobFilterDropdown).toBeVisible();
+
+    await settings.deleteAllJobs();
   });
 
   test('P2-009b: filtering by a specific job should narrow history results', async ({ page }) => {
