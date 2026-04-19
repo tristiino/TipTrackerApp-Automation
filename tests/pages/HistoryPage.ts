@@ -36,6 +36,7 @@ export class HistoryPage {
   readonly firstNote: Locator;
   readonly noteCell: Locator;
   readonly expectedNote: Locator; 
+  readonly noTipsFound: Locator;
 
   // --- Tag Display in History ---
   readonly tagChips: Locator;
@@ -59,6 +60,7 @@ export class HistoryPage {
     this.listTable          = page.getByRole('columnheader', { name: 'Date' });
     this.firstNote          = page.getByRole('cell', { name: '—' }).first();
     this.noteCell           = page.getByRole('cell', { name: '—' });
+    this.noTipsFound        = page.getByText('No tips found for this date');
 
     // Filters
     this.searchInput      = page.getByRole('textbox', { name: 'Search Notes:' });
