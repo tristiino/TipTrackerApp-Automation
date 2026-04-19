@@ -82,7 +82,8 @@ test.describe('Tip Entry Form', () => {
     const tipEntry = new TipEntryPage(page);
     await tipEntry.goto();
 
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; // YYYY-MM-DD local
     const dateValue = await tipEntry.getDateValue();
     expect(dateValue).toBe(today);
   });
