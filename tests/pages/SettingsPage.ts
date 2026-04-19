@@ -70,7 +70,7 @@ export class SettingsPage {
     this.roleTypePercent = page.getByText('Percentage of gross');
 
     // Job Profiles
-    this.noJobCard       = page.locator('div').filter({ hasText: /^No jobs yet\. Add your first job to start tagging shifts\.$/ })
+    this.noJobCard       = page.getByText('No jobs yet. Add your first');
     this.jobTab          = page.getByRole('button', { name: 'Jobs' });
     this.addJobButton        = page.getByRole('button', { name: '+ Add Job' });
     this.jobNameInput        = page.getByLabel(/job name/i);
@@ -80,7 +80,7 @@ export class SettingsPage {
     this.primaryJob          = page.getByText('The Rooftop');
     this.jobLimitError       = page.getByText(/maximum of 10 jobs/i);
     this.editJobButton       = page.getByRole('button', { name: /edit/i }).first();
-    this.deleteJobButton     = page.getByRole('button', { name: 'Delete' })
+    this.deleteJobButton     = page.getByRole('button', { name: 'Delete' });
     this.confirmDeleteButton = page.getByRole('button', { name: /confirm/i });
   }
 
@@ -168,14 +168,7 @@ export class SettingsPage {
     return this.primaryJob.locator('[data-testid="job-profile-item"]').count();
   }
 
-  async deleteAllJobs() {
-    while (await this.deleteJobButton.isVisible()) {
-      await this.deleteJobButton.click();
-      await this.confirmDeleteButton.click();
-    }
-  }
-
-    // delete tip out role
+  // delete tip out role
   async deleteRole() {
     const noTipRole = this.page.getByText('No tip-out roles yet. Add');
     await this.page.waitForTimeout(1000);
@@ -195,6 +188,14 @@ export class SettingsPage {
     while (await this.deleteRoleButton.isVisible()) {
       this.page.once('dialog', dialog => dialog.accept());
       await this.deleteRoleButton.click();
+      await this.page.waitForTimeout(2000);
+    }
+  }
+
+  async deleteAllJobs() {
+    while (await this.deleteJobButton.isVisible()) {
+      this.page.once('dialog', dialog => dialog.accept());
+      await this.deleteJobButton.click();
       await this.page.waitForTimeout(2000);
     }
   }
