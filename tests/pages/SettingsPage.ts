@@ -44,6 +44,7 @@ export class SettingsPage {
   readonly jobLimitError: Locator;
   readonly editJobButton: Locator;
   readonly deleteJobButton: Locator;
+  readonly deleteJobButtons: Locator;
   readonly confirmDeleteButton: Locator;
 
   constructor(page: Page) {
@@ -78,9 +79,10 @@ export class SettingsPage {
     this.jobHourlyRateInput  = page.getByRole('spinbutton', { name: 'Hourly wage (optional)' });
     this.saveJobButton       = page.getByRole('button', { name: 'Add Job' });
     this.primaryJob          = page.getByText('The Rooftop');
-    this.jobLimitError       = page.getByText(/maximum of 10 jobs/i);
+    this.jobLimitError       = page.getByText('Maximum of 10 jobs reached.');
     this.editJobButton       = page.getByRole('button', { name: /edit/i }).first();
     this.deleteJobButton     = page.getByRole('button', { name: 'Delete' });
+    this.deleteJobButtons    = page.getByRole('button', { name: 'Delete' }).first();
     this.confirmDeleteButton = page.getByRole('button', { name: /confirm/i });
   }
 
@@ -192,7 +194,7 @@ export class SettingsPage {
     }
   }
 
-  async deleteAllJobs() {
+  async deleteJob() {
     while (await this.deleteJobButton.isVisible()) {
       this.page.once('dialog', dialog => dialog.accept());
       await this.deleteJobButton.click();
@@ -200,4 +202,15 @@ export class SettingsPage {
     }
   }
 
-}
+  async deleteAllJobs() {
+    await this.goto();
+    await this.jobTab.click();
+    await this.page.waitForTimeout(500);
+    while (await this.deleteJobButtons.isVisible()) {
+      this.page.once('dialog', dialog => dialog.accept());
+      await this.deleteJobButtons.click();
+      await this.page.waitForTimeout(500);
+    }
+  }
+
+} 
