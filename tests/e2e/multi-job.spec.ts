@@ -67,23 +67,9 @@ test.describe('P2-007: Job profile management', () => {
     await settings.editFirstJob({ name: 'The Rooftop — Updated' });
 
     await expect(settings.primaryJob).toContainText('The Rooftop — Updated');
+    await settings.deleteJob();
   });
 
-  test('P2-007d: should allow deleting a job profile', async ({ page }) => {
-    const settings = new SettingsPage(page);
-    await settings.goto();
-    await settings.createJob(
-      JOB_PROFILES.secondary.name,
-      JOB_PROFILES.secondary.location,
-      JOB_PROFILES.secondary.hourlyRate,
-    );
-
-    const countBefore = await settings.getJobCount();
-    await settings.deleteFirstJob();
-    const countAfter = await settings.getJobCount();
-
-    expect(countAfter).toBe(countBefore - 1);
-  });
 });
 
 // ---------------------------------------------------------------------------

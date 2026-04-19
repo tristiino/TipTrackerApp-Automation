@@ -46,6 +46,7 @@ export class SettingsPage {
   readonly deleteJobButton: Locator;
   readonly deleteJobButtons: Locator;
   readonly confirmDeleteButton: Locator;
+  readonly updateJobButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -84,6 +85,7 @@ export class SettingsPage {
     this.deleteJobButton     = page.getByRole('button', { name: 'Delete' });
     this.deleteJobButtons    = page.getByRole('button', { name: 'Delete' }).first();
     this.confirmDeleteButton = page.getByRole('button', { name: /confirm/i });
+    this.updateJobButton     = page.getByRole('button', { name: 'Update Job' });
   }
 
   async goto() {
@@ -156,7 +158,7 @@ export class SettingsPage {
     if (updates.location) await this.jobLocationInput.fill(updates.location);
     if (updates.hourlyRate !== undefined)
       await this.jobHourlyRateInput.fill(String(updates.hourlyRate));
-    await this.saveJobButton.click();
+    await this.updateJobButton.click();
   }
 
   /** Deletes the first job in the list and confirms the dialog. */
