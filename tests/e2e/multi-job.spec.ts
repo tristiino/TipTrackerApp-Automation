@@ -170,16 +170,69 @@ test.describe('P2-009: History page job filter', () => {
   });
 
   test('P2-009b: filtering by a specific job should narrow history results', async ({ page }) => {
-    const job     = new JobProfilePage(page);
+    const settings = new SettingsPage(page);
+    const tipEntry = new TipEntryPage(page);
     const history = new HistoryPage(page);
-    await job.gotoHistory();
+    const multiJob = page.getByRole('cell', { name: '$' }).nth(3);
+    
+    await settings.goto();
+    await settings.createJob(
+      JOB_PROFILES.primary.name,
+      JOB_PROFILES.primary.location,
+      JOB_PROFILES.primary.hourlyRate,
+    );
+    await settings.createJob(
+      JOB_PROFILES.secondary.name,
+      JOB_PROFILES.secondary.location,
+      JOB_PROFILES.secondary.hourlyRate,
+    );
 
-    const allCount = await history.getVisibleRowCount();
-    await job.selectJobFilter(JOB_PROFILES.primary.name);
-    const filteredCount = await history.getVisibleRowCount();
+    // Log a shift for the secondary job
+    await tipEntry.goto();
 
-    // Filtered count must be ≤ total (could equal if all shifts belong to primary)
-    expect(filteredCount).toBeLessThanOrEqual(allCount);
+     await tipEntry.fillShift({
+      date: SAMPLE_SHIFT.date,
+      startTime: SAMPLE_SHIFT.startTime,
+      endTime: SAMPLE_SHIFT.endTime,
+      cashTips: SAMPLE_SHIFT.cashTips,
+      creditTips: SAMPLE_SHIFT.creditTips,
+    });
+
+    await tipEntry.jobSelectorPrimary.click();
+    await tipEntry.jobSelectorPrimary.selectOption({ label: 'Brunch Spot · Midtown' });
+    await tipEntry.submit();
+    await expect(tipEntry.successMessage).toBeVisible();
+
+    await tipEntry.fillShift({
+      date: SAMPLE_SHIFT.date,
+      startTime: SAMPLE_SHIFT.startTime,
+      endTime: SAMPLE_SHIFT.endTime,
+      cashTips: SAMPLE_SHIFT.cashTips,
+      creditTips: SAMPLE_SHIFT.creditTips,
+    });
+
+    await tipEntry.jobSelectorPrimary.click();
+    await tipEntry.jobSelectorPrimary.selectOption({ label: 'The Rooftop · Downtown' });
+    await tipEntry.submit();
+    await expect(tipEntry.successMessage).toBeVisible();
+
+    await history.goto();
+
+    await history.listViewButton.scrollIntoViewIfNeeded();
+    await history.listViewButton.click();
+    await expect(multiJob).toBeVisible();
+
+    await history.jobFilterDropdown.scrollIntoViewIfNeeded();
+    await history.jobFilterDropdown.click();
+    await history.jobFilterDropdown.selectOption({ label: 'The Rooftop' });
+    
+    await history.listViewButton.scrollIntoViewIfNeeded();
+    await expect(multiJob).toBeHidden();
+
+    await history.deleteAllShifts();
+    await settings.deleteAllJobs();
+    
+    
   });
 
   test('P2-009c: "All Jobs" filter option should restore all shifts', async ({ page }) => {
