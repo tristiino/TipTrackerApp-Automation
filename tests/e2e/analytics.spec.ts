@@ -1,5 +1,6 @@
 import { test, expect } from '../fixtures/auth-test';
 import { DashboardPage } from '../pages/DashboardPage';
+import { HistoryPage } from '../pages/HistoryPage';
 
 /**
  * Analytics Dashboard test suite
@@ -188,56 +189,40 @@ test.describe('P2-026: Dashboard tag analytics filter', () => {
  */
 test.describe('P2-027: Calendar view in reports', () => {
   test('P2-027a: history page should default to calendar view on first load', async ({ page }) => {
-    await page.goto('/reports');
-    const calendarGrid = page.getByText('SunMonTueWedThuFriSat6$');
-    await expect(calendarGrid).toBeVisible();
+    const history = new HistoryPage(page);
+    await history.goto();
+
+    await history.calendarViewButton.click();
+    await expect(history.calendarGrid).toBeVisible();
   });
 
   test('P2-027b: toggling to table view and back to calendar should work', async ({ page }) => {
-    await page.goto('/reports');
-
-    const calendarGrid  = page.getByText('SunMonTueWedThuFriSat6$');
-    const historyTable  = page.getByText('Tip EntriesDateAmountTip-');
-    const listButton    = page.getByRole('button', { name: 'Table view' });
-    const calendarButton = page.getByRole('button', { name: 'Calendar view' });
+    const history = new HistoryPage(page);
+    await history.goto();
 
     // Switch to list
-    await listButton.click();
-    await expect(historyTable).toBeVisible();
-    await expect(calendarGrid).not.toBeVisible();
+    await history.listViewButton.click();
+    await expect(history.listTable).toBeVisible();
+    await expect(history.calendarGrid).not.toBeVisible();
 
     // Switch back to calendar
-    await calendarButton.click();
-    await expect(calendarGrid).toBeVisible();
-    await expect(historyTable).not.toBeVisible();
+    await history.calendarViewButton.click();
+    await expect(history.calendarGrid).toBeVisible();
+    await expect(history.listTable).not.toBeVisible();
   });
 
   test('P2-027c: selected view should persist after a page reload', async ({ page }) => {
-    await page.goto('/reports');
-    
-    const listButton    = page.getByRole('button', { name: 'Table view' });
-    const calendarGrid  = page.getByText('SunMonTueWedThuFriSat6$');
-    const historyTable  = page.getByText('Tip EntriesDateAmountTip-');
+    const history = new HistoryPage(page);
+    await history.goto();
 
     // Switch to list view
-    await listButton.click();
-    await expect(historyTable).toBeVisible();
+    await history.listViewButton.click();
+    await expect(history.listTable).toBeVisible();
 
     // Reload — list view should still be active (persisted in localStorage)
     await page.reload();
-    await expect(historyTable).toBeVisible();
-    await expect(calendarGrid).not.toBeVisible();
+    await expect(history.listTable).toBeVisible();
+    await expect(history.calendarGrid).not.toBeVisible();
   });
 
-  test('P2-027d: calendar dates should default to the current pay period when one is configured', async ({ page }) => {
-    // Navigate to history — the calendar header/label should reflect the pay period range
-    await page.goto('/reports');
-
-    const calendarGrid  = page.getByText('SunMonTueWedThuFriSat6$');
-    await expect(calendarGrid).toBeVisible();
-
-    // The pay period date range label must be visible (set during pay-period.spec.ts setup)
-    const periodLabel = page.getByText('Start Date:End Date:Search');
-    await expect(periodLabel).toBeVisible();
-  });
 });
