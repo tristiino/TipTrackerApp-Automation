@@ -21,6 +21,8 @@ export class TipEntryPage {
   readonly tipPoolInput: Locator;
   readonly shiftTypeInput: Locator;
   readonly notesInput: Locator;
+  readonly jobSelector: Locator;
+  readonly jobSelectorPrimary: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -29,7 +31,7 @@ export class TipEntryPage {
     this.endTimeInput = page.getByRole('textbox').nth(2);
     this.hoursDisplay = page.getByText(/Hours Worked/i).locator('..');
     this.cashTipsInput = page.locator('#cashTips');
-    this.notesInput = page.getByLabel(/notes/i);
+    this.notesInput = page.getByRole('textbox', { name: 'Notes' });
     this.creditTipsInput = page.locator('#creditTips');
     this.totalTipsDisplay = page.locator('.tip-total-value');
     this.submitButton = page.getByRole('button', { name: 'Submit' });
@@ -37,6 +39,8 @@ export class TipEntryPage {
     this.errorMessage = page.getByText('Submission unsuccessful.');
     this.tipPoolInput = page.getByRole('spinbutton', { name: 'Number of People in Tip Pool' });
     this.shiftTypeInput = page.getByRole('button', { name: 'Evening' })
+    this.jobSelector = page.getByText('Job (optional)— Unassigned —');
+    this.jobSelectorPrimary = page.getByRole('combobox');
   }
 
   async goto() {
@@ -57,6 +61,7 @@ export class TipEntryPage {
     creditTips,
     tipPool,
     notes,
+    job,
   }: {
     date?: string;
     startTime?: string;
@@ -65,6 +70,7 @@ export class TipEntryPage {
     creditTips: number;
     tipPool?: number;
     notes?: string;
+    job?: string;
   }) {
     if (date) await this.dateInput.fill(date);
     await this.shiftTypeInput.click();
@@ -73,6 +79,7 @@ export class TipEntryPage {
     await this.cashTipsInput.fill(String(cashTips));
     await this.creditTipsInput.fill(String(creditTips));
     if (notes) await this.notesInput.fill(notes);
+    if (job) await this.jobSelectorPrimary.selectOption({ label: job });
   }
 
   async submit() {

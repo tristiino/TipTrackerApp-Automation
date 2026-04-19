@@ -76,10 +76,27 @@ test.describe('P2-007: Job profile management', () => {
 // ---------------------------------------------------------------------------
 test.describe('P2-008: Job selector on tip entry form', () => {
   test('P2-008a: should show a job selector dropdown on the tip entry form', async ({ page }) => {
-    const job = new JobProfilePage(page);
-    await job.gotoTipEntry();
+    const settings = new SettingsPage(page);
+    const tipEntry = new TipEntryPage(page);
 
-    await expect(job.jobSelectorDropdown).toBeVisible();
+    await settings.goto();
+
+    await settings.jobTab.click();
+
+    while ((await settings.noJobCard.isVisible())) {
+      await settings.createJob(
+        JOB_PROFILES.primary.name,
+        JOB_PROFILES.primary.location,
+        JOB_PROFILES.primary.hourlyRate,
+      );
+    }
+
+    await expect(settings.primaryJob).toContainText(JOB_PROFILES.primary.name);
+
+    await tipEntry.goto();
+    await tipEntry.notesInput.scrollIntoViewIfNeeded();
+    await tipEntry.jobSelectorPrimary.selectOption({ label: 'The Rooftop · Downtown' });
+    await expect(tipEntry.jobSelectorPrimary.locator('option:checked')).toHaveText('The Rooftop · Downtown');
   });
 
   test('P2-008b: job selector should default to the most recently used job', async ({ page }) => {
