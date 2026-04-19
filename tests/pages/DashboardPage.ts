@@ -21,6 +21,7 @@ export class DashboardPage {
   readonly summaryCardAvgTips: Locator;
   readonly summaryCardHourlyWage: Locator;
   readonly cashCreditChart: Locator;
+  readonly jobFilterDropdown: Locator;
 
   // Pay Period — Ad-Hoc 2026-03-30
   readonly chartTogglePayPeriod: Locator;
@@ -54,6 +55,7 @@ export class DashboardPage {
     this.summaryCardAvgTips = page.locator('[data-testid="card-avg-tips"], .summary-card').filter({ hasText: /average|avg/i });
     this.summaryCardHourlyWage = page.locator('[data-testid="card-hourly-wage"], .summary-card').filter({ hasText: /hourly|per hour/i });
     this.cashCreditChart = page.locator('[data-testid="cash-credit-chart"], canvas').nth(1);
+    this.jobFilterDropdown = page.getByRole('combobox').first();
 
     // Navigation
     this.navDashboard = page.getByRole('link').filter({ hasText: 'Dashboard' });
