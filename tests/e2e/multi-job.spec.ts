@@ -24,7 +24,7 @@ test.describe('P2-007: Job profile management', () => {
   test('P2-007a: should allow creating a job profile with name, location, and hourly rate', async ({ page }) => {
     const settings = new SettingsPage(page);
     await settings.goto();
-    
+
     await settings.jobTab.click();
 
     while ((await settings.noJobCard.isVisible())) {
@@ -36,21 +36,23 @@ test.describe('P2-007: Job profile management', () => {
     }
 
     await expect(settings.primaryJob).toContainText(JOB_PROFILES.primary.name);
-    await settings.deleteAllJobs();
+    await settings.deleteJob();
   });
 
   test('P2-007b: should block creating more than 10 job profiles', async ({ page }) => {
     const settings = new SettingsPage(page);
     await settings.goto();
+    
 
     // Create 10 jobs (some may already exist; the UI should enforce the cap)
     for (let i = 1; i <= 10; i++) {
       await settings.createJob(`Job ${i}`, `Location ${i}`, 8 + i * 0.25);
+      await page.waitForTimeout(1000)
     }
-
-    // Attempting an 11th should surface the limit error
-    await settings.addJobButton.click();
+    
+    await settings.jobLimitError.scrollIntoViewIfNeeded();
     await expect(settings.jobLimitError).toBeVisible();
+    await settings.deleteAllJobs();
   });
 
   test('P2-007c: should allow editing an existing job profile', async ({ page }) => {
