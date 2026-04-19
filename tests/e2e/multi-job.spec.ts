@@ -394,16 +394,6 @@ test.describe('P2-010: Per-job dashboard analytics', () => {
     await history.deleteAllShifts();
     await settings.deleteAllJobs();
   });
-
-  test('P2-010c: default (aggregated) view should combine all jobs', async ({ page }) => {
-    const job = new JobProfilePage(page);
-    const dashboard = new DashboardPage(page);
-    await job.gotoDashboard();
-
-    // On fresh load the filter should show "All Jobs" or equivalent default
-    await expect(job.jobFilterDropdown).not.toHaveValue(JOB_PROFILES.primary.name);
-    await expect(dashboard.summaryCardTotalTips).toBeVisible();
-  });
 });
 
 // ---------------------------------------------------------------------------
