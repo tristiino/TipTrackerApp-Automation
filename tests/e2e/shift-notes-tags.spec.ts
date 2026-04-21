@@ -40,7 +40,8 @@ test.describe('P2-013: Shift notes', () => {
       creditTips: TAGGED_SHIFT.creditTips,
       notes: TAGGED_SHIFT.note,
     });
-    await tipEntry.submit();
+
+    await tipEntry.submitButton.click();
     await expect(tipEntry.successMessage).toBeVisible();
 
     // Verify note in history
@@ -193,17 +194,19 @@ test.describe('P2-016: Dashboard tag analytics filter', () => {
     await page.goto('/dashboard');
     await dashboard.expectLoaded();
 
-    await expect(history.dashboardTagFilter).toBeVisible();
+    const tagFilter = page.getByRole('combobox');
+    await expect(tagFilter).toBeVisible();
   });
 
   test('P2-016b: selecting a tag filter should update charts and summary cards', async ({ page }) => {
     const history   = new HistoryPage(page);
     const dashboard = new DashboardPage(page);
+    const tagFilter = page.getByRole('combobox');
     await page.goto('/dashboard');
     await dashboard.expectLoaded();
 
     const totalBefore = await dashboard.summaryCardTotalTips.textContent();
-    await history.dashboardTagFilter.selectOption(TAGGED_SHIFT.tags[0]);
+    await tagFilter.selectOption(TAGGED_SHIFT.tags[0]);
     await expect(dashboard.cashCreditChart).toBeVisible();
 
     // Cards must still render (value may or may not change)
@@ -231,7 +234,8 @@ test.describe('P2-018: Calendar view in shift history', () => {
       creditTips: TAGGED_SHIFT.creditTips,
       notes: TAGGED_SHIFT.note,
     });
-    await tipEntry.submit();
+    await tipEntry.submitButton.click();
+    await expect(tipEntry.successMessage).toBeVisible();
     
     await history.goto();
 
@@ -329,7 +333,7 @@ test.describe('P2-025: Shift notes and keyword/tag search in reports (Sprint 4 i
       tipPool: TAGGED_SHIFT.tipPool,
       notes: TAGGED_SHIFT.note,
     });
-    await tipEntry.submit();
+    await tipEntry.submitButton.click();
     await expect(tipEntry.successMessage).toBeVisible();
 
     await history.goto();

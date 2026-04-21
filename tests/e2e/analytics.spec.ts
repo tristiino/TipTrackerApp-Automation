@@ -140,7 +140,7 @@ test.describe('P2-026: Dashboard tag analytics filter', () => {
     await dashboard.goto();
     await dashboard.expectLoaded();
 
-    const tagFilter = page.getByRole('combobox').nth(1);
+    const tagFilter = page.getByRole('combobox');
     await expect(tagFilter).toBeVisible();
   });
 
@@ -149,8 +149,8 @@ test.describe('P2-026: Dashboard tag analytics filter', () => {
     await dashboard.goto();
     await dashboard.expectLoaded();
 
-    const tagFilter = page.getByRole('combobox').nth(1);
-    await page.getByRole('combobox').nth(1).selectOption('1'); // pick the first real tag (not "All Tags")
+    const tagFilter = page.getByRole('combobox');
+    await tagFilter.selectOption('1'); // pick the first real tag (not "All Tags")
 
     // Chart and cards must remain visible with filtered data
     await expect(dashboard.cashCreditChart).toBeVisible();
@@ -163,10 +163,10 @@ test.describe('P2-026: Dashboard tag analytics filter', () => {
     await dashboard.goto();
     await dashboard.expectLoaded();
 
-    const tagFilter = page.getByRole('combobox').nth(1);
+    const tagFilter = page.getByRole('combobox');
 
     // Apply a tag filter then reset
-    await page.getByRole('combobox').nth(1).selectOption('1');
+    await tagFilter.selectOption('1');
     const filteredTotal = await dashboard.summaryCardTotalTips.textContent();
 
     await tagFilter.selectOption({ label: 'All Tags' });
