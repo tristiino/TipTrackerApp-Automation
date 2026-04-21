@@ -82,7 +82,8 @@ test.describe('Tip Entry Form', () => {
     const tipEntry = new TipEntryPage(page);
     await tipEntry.goto();
 
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; // YYYY-MM-DD local
     const dateValue = await tipEntry.getDateValue();
     expect(dateValue).toBe(today);
   });
@@ -100,7 +101,6 @@ test.describe('Tip Entry Form', () => {
     await tipEntry.goto();
 
     await tipEntry.fillShift({ cashTips: -10, creditTips: 50 });
-    await tipEntry.tipPoolInput.fill('1');
     await tipEntry.submit();
 
     await expect(tipEntry.errorMessage).toBeVisible();
@@ -112,7 +112,6 @@ test.describe('Tip Entry Form', () => {
     await tipEntry.goto();
 
     await tipEntry.fillShift({ cashTips: 50, creditTips: -10 });
-    await tipEntry.tipPoolInput.fill('1');
     await tipEntry.submit();
 
     await expect(tipEntry.errorMessage).toBeVisible();
