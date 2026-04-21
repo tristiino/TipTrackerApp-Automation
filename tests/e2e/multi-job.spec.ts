@@ -90,6 +90,7 @@ test.describe('P2-008: Job selector on tip entry form', () => {
       );
     }
 
+    await page.waitForLoadState('networkidle');
     await expect(settings.primaryJob).toContainText(JOB_PROFILES.primary.name);
 
     await tipEntry.goto();
@@ -382,6 +383,7 @@ test.describe('P2-010: Per-job dashboard analytics', () => {
     await expect(tipEntry.successMessage).toBeVisible();
 
     await dashboard.goto();
+    await page.waitForLoadState('networkidle');
     await dashboard.jobFilterDropdown.click();
     await dashboard.jobFilterDropdown.selectOption({ label: 'Brunch Spot' });
     await expect(firstJob).toBeVisible();

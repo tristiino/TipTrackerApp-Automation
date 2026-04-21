@@ -151,6 +151,7 @@ export class SettingsPage {
     await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await this.jobHourlyRateInput.fill(String(hourlyRate));
     await this.saveJobButton.click();
+    await this.page.waitForLoadState('networkidle');
     await expect(this.noJobCard).toBeHidden();
   }
 
