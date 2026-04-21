@@ -225,6 +225,21 @@ test.describe('P2-027: Calendar view in reports', () => {
 
   test('P2-027c: selected view should persist after a page reload', async ({ page }) => {
     const history = new HistoryPage(page);
+    const tipEntry = new TipEntryPage(page);
+
+    await tipEntry.goto();
+
+    await tipEntry.fillShift({
+          date: SAMPLE_SHIFT.date,
+          startTime: SAMPLE_SHIFT.startTime,
+          endTime: SAMPLE_SHIFT.endTime,
+          cashTips: SAMPLE_SHIFT.cashTips,
+          creditTips: SAMPLE_SHIFT.creditTips,
+          tipPool: SAMPLE_SHIFT.tipPool,
+        });
+    await tipEntry.submit();
+    await expect(tipEntry.successMessage).toBeVisible();
+
     await history.goto();
 
     // Switch to list view
@@ -235,6 +250,8 @@ test.describe('P2-027: Calendar view in reports', () => {
     await page.reload();
     await expect(history.listTable).toBeVisible();
     await expect(history.calendarGrid).not.toBeVisible();
+
+    await history.deleteAllShifts();
   });
 
 });
