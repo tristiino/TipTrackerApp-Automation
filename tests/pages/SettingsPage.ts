@@ -31,6 +31,7 @@ export class SettingsPage {
   readonly deleteRoleButton: Locator;
   readonly roleTypeFixed: Locator;
   readonly roleTypePercent: Locator;
+  readonly applyJob: Locator;
 
   // --- Job Profiles (P2-007) ---
   readonly noJobCard: Locator;
@@ -70,6 +71,7 @@ export class SettingsPage {
     this.deleteRoleButton = page.getByRole('button', { name: 'Delete' }).first();
     this.roleTypeFixed = page.getByText('Fixed dollar amount');
     this.roleTypePercent = page.getByText('Percentage of gross');
+    this.applyJob = page.getByRole('combobox');
 
     // Job Profiles
     this.noJobCard       = page.getByText('No jobs yet. Add your first');
@@ -188,6 +190,7 @@ export class SettingsPage {
   async deleteAllRoles() {
     await this.goto();
     await this.tipOutTab.click();
+    await this.page.waitForLoadState('networkidle');
 
     while (await this.deleteRoleButton.isVisible()) {
       this.page.once('dialog', dialog => dialog.accept());
@@ -207,11 +210,32 @@ export class SettingsPage {
   async deleteAllJobs() {
     await this.goto();
     await this.jobTab.click();
-    await this.page.waitForTimeout(500);
+    await this.page.waitForLoadState('networkidle');
+
     while (await this.deleteJobButtons.isVisible()) {
       this.page.once('dialog', dialog => dialog.accept());
       await this.deleteJobButtons.click();
       await this.page.waitForTimeout(500);
+    }
+  }
+
+  async createRoleTip(name: string, type: 'percent' | 'fixed', amount: number) {
+    await this.addRoleButton.click();
+    await this.roleNameInput.fill(name);
+    
+    if (type === 'fixed') {
+      await this.roleTypeFixed.click();
+      await this.roleAmountFixed.fill(String(amount));
+    } else {
+      await this.roleTypePercent.click();
+      await this.roleAmountPercent.fill(String(amount));
+    }
+    
+    if (await this.overLimitError.isVisible()) {
+      console.warn('[createRole] Over-limit warning: tip-out splits exceed 100%, save button disabled');
+    } else {
+      await this.applyJob.selectOption({ label: 'The Rooftop' });
+      await this.saveRoleButton.click();
     }
   }
 
