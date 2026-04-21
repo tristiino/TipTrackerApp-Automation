@@ -151,6 +151,7 @@ export class SettingsPage {
     await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await this.jobHourlyRateInput.fill(String(hourlyRate));
     await this.saveJobButton.click();
+    await expect(this.noJobCard).toBeHidden();
   }
 
   /** Edits the first job in the list with any provided field updates. */
