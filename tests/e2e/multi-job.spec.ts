@@ -4,7 +4,7 @@ import { JobProfilePage } from '../pages/JobProfilePage';
 import { TipEntryPage } from '../pages/TipEntryPage';
 import { DashboardPage } from '../pages/DashboardPage';
 import { HistoryPage } from '../pages/HistoryPage';
-import { JOB_PROFILES, SAMPLE_SHIFT, LEGACY_SHIFT } from '../fixtures/test-data';
+import { JOB_PROFILES, SAMPLE_SHIFT, LEGACY_SHIFT, TIP_OUT_ROLES } from '../fixtures/test-data';
 
 /**
  * Multi-Job Support test suite
@@ -47,7 +47,7 @@ test.describe('P2-007: Job profile management', () => {
     // Create 10 jobs (some may already exist; the UI should enforce the cap)
     for (let i = 1; i <= 10; i++) {
       await settings.createJob(`Job ${i}`, `Location ${i}`, 8 + i * 0.25);
-      await page.waitForTimeout(1000)
+      await expect(page.getByText(`Job ${i}`)).toBeVisible();
     }
 
     await settings.jobLimitError.scrollIntoViewIfNeeded();
@@ -409,10 +409,19 @@ test.describe('P2-011: Job-scoped tip-out configuration', () => {
       JOB_PROFILES.primary.hourlyRate,
     );
 
-    // Navigate into the job's detail/edit view and check for a tip-out config section
-    await settings.editJobButton.click();
-    const tipOutSection = page.locator('[data-testid="job-tip-out-config"]');
+
+    await settings.tipOutTab.click();
+    await settings.createRoleTip(
+          TIP_OUT_ROLES.busser.name,
+          TIP_OUT_ROLES.busser.type,
+          TIP_OUT_ROLES.busser.amount,
+        );
+    
+    const tipOutSection = page.getByText('· The Rooftop');
     await expect(tipOutSection).toBeVisible();
+
+    await settings.deleteAllRoles();
+    await settings.deleteAllJobs();
   });
 });
 
