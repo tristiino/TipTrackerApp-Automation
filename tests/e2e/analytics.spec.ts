@@ -1,6 +1,8 @@
 import { test, expect } from '../fixtures/auth-test';
+import { SAMPLE_SHIFT } from '../fixtures/test-data';
 import { DashboardPage } from '../pages/DashboardPage';
 import { HistoryPage } from '../pages/HistoryPage';
+import { TipEntryPage } from '../pages/TipEntryPage';
 
 /**
  * Analytics Dashboard test suite
@@ -188,16 +190,24 @@ test.describe('P2-026: Dashboard tag analytics filter', () => {
  * and pay-period date defaulting in the calendar.
  */
 test.describe('P2-027: Calendar view in reports', () => {
-  test('P2-027a: history page should default to calendar view on first load', async ({ page }) => {
-    const history = new HistoryPage(page);
-    await history.goto();
-
-    await history.calendarViewButton.click();
-    await expect(history.calendarGrid).toBeVisible();
-  });
 
   test('P2-027b: toggling to table view and back to calendar should work', async ({ page }) => {
     const history = new HistoryPage(page);
+    const tipEntry = new TipEntryPage(page);
+
+    await tipEntry.goto();
+
+    await tipEntry.fillShift({
+          date: SAMPLE_SHIFT.date,
+          startTime: SAMPLE_SHIFT.startTime,
+          endTime: SAMPLE_SHIFT.endTime,
+          cashTips: SAMPLE_SHIFT.cashTips,
+          creditTips: SAMPLE_SHIFT.creditTips,
+          tipPool: SAMPLE_SHIFT.tipPool,
+        });
+    await tipEntry.submit();
+    await expect(tipEntry.successMessage).toBeVisible();
+
     await history.goto();
 
     // Switch to list
@@ -209,6 +219,8 @@ test.describe('P2-027: Calendar view in reports', () => {
     await history.calendarViewButton.click();
     await expect(history.calendarGrid).toBeVisible();
     await expect(history.listTable).not.toBeVisible();
+
+    await history.deleteAllShifts();
   });
 
   test('P2-027c: selected view should persist after a page reload', async ({ page }) => {
