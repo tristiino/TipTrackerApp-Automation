@@ -430,7 +430,7 @@ test.describe('P2-011: Job-scoped tip-out configuration', () => {
       JOB_PROFILES.primary.location,
       JOB_PROFILES.primary.hourlyRate,
     );
-
+    await page.waitForLoadState('networkidle');
 
     await settings.tipOutTab.click();
     await settings.createRoleTip(

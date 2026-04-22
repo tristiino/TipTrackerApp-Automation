@@ -224,6 +224,7 @@ export class SettingsPage {
   }
 
   async createRoleTip(name: string, type: 'percent' | 'fixed', amount: number) {
+    await this.page.waitForLoadState('networkidle');
     await this.addRoleButton.click();
     await this.roleNameInput.fill(name);
     
