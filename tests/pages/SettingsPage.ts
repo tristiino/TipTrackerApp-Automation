@@ -68,7 +68,7 @@ export class SettingsPage {
     this.saveRoleButton  = page.getByRole('button', { name: 'Add Role' });
     this.roleList        = page.locator('[data-testid="tip-out-role-list"]');
     this.overLimitError  = page.getByText('This would push your total');
-    this.deleteRoleButton = page.getByRole('button', { name: 'Delete' }).first();
+    this.deleteRoleButton = page.getByRole('button', { name: 'Delete' });
     this.roleTypeFixed = page.getByText('Fixed dollar amount');
     this.roleTypePercent = page.getByText('Percentage of gross');
     this.applyJob = page.getByRole('combobox');
@@ -131,6 +131,7 @@ export class SettingsPage {
       console.warn('[createRole] Over-limit warning: tip-out splits exceed 100%, save button disabled');
     } else {
       await this.saveRoleButton.click();
+      await this.page.waitForLoadState('networkidle');
     }
   }
 
