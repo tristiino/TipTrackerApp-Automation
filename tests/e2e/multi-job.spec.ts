@@ -23,6 +23,7 @@ test.use({ storageState: 'tests/.auth/user.json' });
 test.describe('P2-007: Job profile management', () => {
   test('P2-007a: should allow creating a job profile with name, location, and hourly rate', async ({ page }) => {
     const settings = new SettingsPage(page);
+    await settings.deleteAllJobs();
     await settings.goto();
 
     await settings.jobTab.click();
@@ -36,17 +37,19 @@ test.describe('P2-007: Job profile management', () => {
     }
 
     await expect(settings.primaryJob).toContainText(JOB_PROFILES.primary.name);
-    await settings.deleteJob();
+    await settings.deleteAllJobs();
   });
 
   test('P2-007b: should block creating more than 10 job profiles', async ({ page }) => {
     const settings = new SettingsPage(page);
+    await settings.deleteAllJobs();
     await settings.goto();
 
 
     // Create 10 jobs (some may already exist; the UI should enforce the cap)
     for (let i = 1; i <= 10; i++) {
       await settings.createJob(`Job ${i}`, `Location ${i}`, 8 + i * 0.25);
+      await page.waitForLoadState('networkidle');
       await expect(page.getByText(`Job ${i}`)).toBeVisible();
     }
 
@@ -57,6 +60,7 @@ test.describe('P2-007: Job profile management', () => {
 
   test('P2-007c: should allow editing an existing job profile', async ({ page }) => {
     const settings = new SettingsPage(page);
+    await settings.deleteAllJobs();
     await settings.goto();
     await settings.createJob(
       JOB_PROFILES.primary.name,
@@ -78,6 +82,8 @@ test.describe('P2-008: Job selector on tip entry form', () => {
   test('P2-008a: should show a job selector dropdown on the tip entry form', async ({ page }) => {
     const settings = new SettingsPage(page);
     const tipEntry = new TipEntryPage(page);
+
+    await settings.deleteAllJobs();
 
     await settings.goto();
     await settings.jobTab.click();
@@ -106,6 +112,9 @@ test.describe('P2-008: Job selector on tip entry form', () => {
     const settings = new SettingsPage(page);
     const tipEntry = new TipEntryPage(page);
     const history = new HistoryPage(page);
+
+    await history.deleteAllShifts();
+    await settings.deleteAllJobs();
 
     await settings.goto();
     await settings.createJob(
@@ -156,6 +165,9 @@ test.describe('P2-009: History page job filter', () => {
   test('P2-009a: history page should show a job filter dropdown', async ({ page }) => {
     const history = new HistoryPage(page);
     const settings = new SettingsPage(page);
+
+    await history.deleteAllShifts();
+    await settings.deleteAllJobs();
 
     await settings.goto();
     await settings.createJob(
@@ -242,6 +254,9 @@ test.describe('P2-009: History page job filter', () => {
     const history = new HistoryPage(page);
     const multiJob = page.getByRole('cell', { name: '$' }).nth(3);
 
+    await history.deleteAllShifts();
+    await settings.deleteAllJobs();
+
     await settings.goto();
     await settings.createJob(
       JOB_PROFILES.primary.name,
@@ -315,6 +330,8 @@ test.describe('P2-010: Per-job dashboard analytics', () => {
     const dashboard = new DashboardPage(page);
     const settings = new SettingsPage(page);
 
+    await settings.deleteAllJobs();
+
     await settings.goto();
     await settings.createJob(
       JOB_PROFILES.primary.name,
@@ -340,6 +357,9 @@ test.describe('P2-010: Per-job dashboard analytics', () => {
     const dashboard = new DashboardPage(page);
     const firstJob = page.getByText('$131.00')
     const secondJob = page.getByText('$232.00')
+
+    await settings.deleteAllJobs();
+    await history.deleteAllShifts();
 
     await settings.goto();
     await settings.createJob(

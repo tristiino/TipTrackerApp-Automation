@@ -145,6 +145,7 @@ export class SettingsPage {
   async createJob(name: string, location: string, hourlyRate: number) {
     await this.goto();
     await this.jobTab.click();
+    await this.page.waitForLoadState('networkidle');
     await this.addJobButton.click();
     await this.jobNameInput.fill(name);
     await this.jobLocationInput.fill(location);

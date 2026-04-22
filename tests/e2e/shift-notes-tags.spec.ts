@@ -87,6 +87,7 @@ test.describe('P2-014: Shift tags', () => {
     await tagInput.click();
     await tagInput.fill('pat');
 
+    await page.waitForLoadState('networkidle');
     await expect(suggestion).toBeVisible();
   });
 
