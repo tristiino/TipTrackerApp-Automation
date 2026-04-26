@@ -79,16 +79,17 @@ test.describe('P2-014: Shift tags', () => {
 
     await tipEntry.goto();
 
+    await tagInput.scrollIntoViewIfNeeded();
     await tagInput.click();
     await tagInput.fill('pat'); // prefix of 'patio'
     await page.getByRole('textbox', { name: 'Add tags…' }).press('Enter');
 
     await page.getByRole('button', { name: 'Remove tag' }).click();
+    await tagInput.scrollIntoViewIfNeeded();
     await tagInput.click();
     await tagInput.fill('pat');
 
-    await page.waitForLoadState('networkidle');
-    await expect(suggestion).toBeVisible();
+    await expect(suggestion).toBeVisible({ timeout: 5000 });
   });
 
   test('P2-014c: multiple tags can be applied to a single shift', async ({ page }) => {
