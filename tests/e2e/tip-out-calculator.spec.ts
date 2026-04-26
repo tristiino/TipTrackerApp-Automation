@@ -37,6 +37,7 @@ test.describe('P2-001: Tip-out role management', () => {
 
     await settings.tipOutTab.click();
     await settings.addRoleButton.click();
+    await page.waitForLoadState('networkidle');
 
     await expect(settings.roleNameInput).toBeVisible();
   });

@@ -36,7 +36,7 @@ export class HistoryPage {
   readonly overrideBadge: Locator;
   readonly firstNote: Locator;
   readonly noteCell: Locator;
-  readonly expectedNote: Locator; 
+  readonly expectedNote: Locator;
   readonly noTipsFound: Locator;
 
   // --- Tag Display in History ---
@@ -51,37 +51,37 @@ export class HistoryPage {
 
     // View toggles
     this.calendarViewButton = page.getByRole('button', { name: 'Calendar view' });
-    this.listViewButton     = page.getByRole('button', { name: 'Table view' });
+    this.listViewButton = page.getByRole('button', { name: 'Table view' });
 
     // Delete shifts
     this.deleteShiftButton = page.getByRole('button', { name: 'Delete' }).first();
 
     // history view
-    this.calendarGrid       = page.getByText('Sun');
-    this.listTable          = page.getByRole('columnheader', { name: 'Date' });
-    this.firstNote          = page.getByRole('cell', { name: '—' }).first();
-    this.noteCell           = page.getByRole('cell', { name: '—' });
-    this.noTipsFound        = page.getByText('No tips found for this date');
+    this.calendarGrid = page.getByText('Sun');
+    this.listTable = page.getByRole('columnheader', { name: 'Date' });
+    this.firstNote = page.getByRole('cell', { name: '—' }).first();
+    this.noteCell = page.getByRole('cell', { name: '—' });
+    this.noTipsFound = page.getByText('No tips found for this date');
 
     // Filters
-    this.searchInput      = page.getByRole('textbox', { name: 'Search Notes:' });
-    this.dateFromInput    = page.getByRole('textbox', { name: 'Start Date:' });
-    this.dateToInput      = page.getByRole('textbox', { name: 'End Date:' });
+    this.searchInput = page.getByRole('textbox', { name: 'Search Notes:' });
+    this.dateFromInput = page.getByRole('textbox', { name: 'Start Date:' });
+    this.dateToInput = page.getByRole('textbox', { name: 'End Date:' });
     this.tagFilterDropdown = page.getByLabel('Tag:');
     this.clearFiltersButton = page.getByRole('button', { name: /clear/i });
     this.jobFilterDropdown = page.getByLabel('Job:');
 
     // Rows
-    this.shiftRows      = page.locator('[data-testid="shift-row"]');
+    this.shiftRows = page.locator('[data-testid="shift-row"]');
     this.expandRowButton = page.locator('[data-testid="expand-shift"]').first();
-    this.shiftNoteText  = page.locator('[data-testid="shift-note"]');
-    this.overrideBadge  = page.locator('[data-testid="override-badge"]');
-    this.tagChips       = page.getByRole('cell', { name: 'Tags: event busy night patio' });
-    this.expectedNote   = page.getByRole('cell', { name: 'Busy patio shift, large party of' });
+    this.shiftNoteText = page.locator('[data-testid="shift-note"]');
+    this.overrideBadge = page.locator('[data-testid="override-badge"]');
+    this.tagChips = page.getByRole('cell', { name: 'Tags: event busy night patio' });
+    this.expectedNote = page.getByRole('cell', { name: 'Busy patio shift, large party of' });
 
     // Dashboard tag filter
     this.dashboardTagFilter = page.getByRole('combobox').nth(1);
-    this.allTagsOption      = page.getByRole('option', { name: /all tags/i });
+    this.allTagsOption = page.getByRole('option', { name: /all tags/i });
   }
 
   /** Navigate to the shift history page. */
@@ -148,16 +148,16 @@ export class HistoryPage {
     return (await this.shiftNoteText.textContent()) ?? '';
   }
 
-  async notesPresent(){
+  async notesPresent() {
     if (await this.firstNote.isVisible()) {
-       const edit = await this.page.getByRole('button', { name: 'Edit' }).first();
-       const note = await this.page.getByRole('textbox', { name: 'Notes' });
-       await edit.click();
-       await note.click();
-       await note.fill('test');
-       await this.page.getByRole('button', { name: 'Save Changes' }).click();
+      const edit = await this.page.getByRole('button', { name: 'Edit' }).first();
+      const note = await this.page.getByRole('textbox', { name: 'Notes' });
+      await edit.click();
+      await note.click();
+      await note.fill('test');
+      await this.page.getByRole('button', { name: 'Save Changes' }).click();
     }
-    
+
   }
 
   /** Returns the count of currently visible shift rows. */
@@ -168,13 +168,21 @@ export class HistoryPage {
   /** Navigates to list view and deletes every tip entry one by one. */
   async deleteAllShifts() {
     await this.goto();
-    await this.listViewButton.click();
-    await expect(this.listTable).toBeVisible();
-    while (await this.deleteShiftButton.isVisible()) {
-      this.page.once('dialog', dialog => dialog.accept());
-      await this.deleteShiftButton.click();
-      await this.page.waitForTimeout(1000);
+    await this.page.waitForLoadState('networkidle');
+
+    if (await this.noTipsFound.isHidden()) {
+      await this.listViewButton.click();
+      await expect(this.listTable).toBeVisible();
+      while (await this.deleteShiftButton.isVisible()) {
+        this.page.once('dialog', dialog => dialog.accept());
+        await this.deleteShiftButton.click();
+        await this.page.waitForTimeout(1000);
+      }
+    } else {
+      console.log("No shifts to delete");
+      return;
     }
+
   }
 
   /**
