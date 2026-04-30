@@ -139,6 +139,7 @@ test.describe('P2-008: Job selector on tip entry form', () => {
       creditTips: SAMPLE_SHIFT.creditTips,
     });
 
+    await tipEntry.jobSelectorPrimary.scrollIntoViewIfNeeded();
     await tipEntry.jobSelectorPrimary.click();
     await tipEntry.jobSelectorPrimary.selectOption({ label: 'Brunch Spot · Midtown' });
     await tipEntry.submit();
