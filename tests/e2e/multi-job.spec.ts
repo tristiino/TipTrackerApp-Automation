@@ -139,6 +139,7 @@ test.describe('P2-008: Job selector on tip entry form', () => {
       creditTips: SAMPLE_SHIFT.creditTips,
     });
 
+    await tipEntry.jobSelectorPrimary.scrollIntoViewIfNeeded();
     await tipEntry.jobSelectorPrimary.click();
     await tipEntry.jobSelectorPrimary.selectOption({ label: 'Brunch Spot · Midtown' });
     await tipEntry.submit();
@@ -169,7 +170,6 @@ test.describe('P2-009: History page job filter', () => {
     await history.deleteAllShifts();
     await settings.deleteAllJobs();
 
-    await settings.goto();
     await settings.createJob(
       JOB_PROFILES.primary.name,
       JOB_PROFILES.primary.location,
@@ -177,6 +177,7 @@ test.describe('P2-009: History page job filter', () => {
     );
 
     await history.goto();
+    await page.waitForLoadState('networkidle');
     await expect(history.jobFilterDropdown).toBeVisible();
 
     await settings.deleteAllJobs();
@@ -211,6 +212,7 @@ test.describe('P2-009: History page job filter', () => {
       creditTips: SAMPLE_SHIFT.creditTips,
     });
 
+    await tipEntry.jobSelectorPrimary.scrollIntoViewIfNeeded();
     await tipEntry.jobSelectorPrimary.click();
     await tipEntry.jobSelectorPrimary.selectOption({ label: 'Brunch Spot · Midtown' });
     await tipEntry.submit();
@@ -280,6 +282,7 @@ test.describe('P2-009: History page job filter', () => {
       creditTips: SAMPLE_SHIFT.creditTips,
     });
 
+    await tipEntry.jobSelectorPrimary.scrollIntoViewIfNeeded();
     await tipEntry.jobSelectorPrimary.click();
     await tipEntry.jobSelectorPrimary.selectOption({ label: 'Brunch Spot · Midtown' });
     await tipEntry.submit();
@@ -384,6 +387,7 @@ test.describe('P2-010: Per-job dashboard analytics', () => {
       creditTips: SAMPLE_SHIFT.creditTips,
     });
 
+    await tipEntry.jobSelectorPrimary.scrollIntoViewIfNeeded();
     await tipEntry.jobSelectorPrimary.click();
     await tipEntry.jobSelectorPrimary.selectOption({ label: 'Brunch Spot · Midtown' });
     await tipEntry.submit();
